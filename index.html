@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Experimento: Igualación a la Muestra (Ver. 5)</title>
+    <title>Experimento: Igualación a la Muestra (Ver. 5.2.1)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -43,16 +43,20 @@
 </head>
 <body class="text-slate-800 h-screen flex flex-col items-center justify-center p-4 relative z-0">
 
-    <!-- Se ajustó el tamaño del logo UNAM (w-16, md:w-28) para equilibrarlo visualmente con el de FESI -->
+    <!-- Audios para retroalimentación -->
+    <audio id="audio-correct" src="aplausos.mp3" preload="auto"></audio>
+    <audio id="audio-incorrect" src="Sad distorted violin full.mp3" preload="auto"></audio>
+
+    <!-- Se ajustó el tamaño del logo UNAM para equilibrarlo visualmente con el de FESI -->
     <img src="Escudo-UNAM.png" alt="UNAM" class="absolute top-4 left-4 md:top-8 md:left-8 w-16 sm:w-20 md:w-28 object-contain -z-10">
     <img src="Escudo-FESI.png" alt="FESI" class="absolute top-4 right-4 md:top-8 md:right-8 w-24 sm:w-28 md:w-40 object-contain -z-10">
 
     <div id="app-container" class="w-full max-w-2xl bg-white rounded-2xl shadow-xl p-8 relative overflow-hidden min-h-[500px] flex flex-col justify-center border-t-8 border-amber-500 z-10">
         
         <!-- PANTALLA DE INICIO -->
-    <div id="screen-intro" class="text-center fade-in">
-        <h1 class="text-3xl font-bold text-amber-900 mb-4">Estudio de Toma de Decisiones (Ver. 5.1)</h1>
-        <p class="text-slate-600 mb-6">Gracias por participar. Por favor, ingresa tu código de participante y selecciona tu grupo para comenzar.</p>
+        <div id="screen-intro" class="text-center fade-in">
+            <h1 class="text-3xl font-bold text-amber-900 mb-4">Estudio de Toma de Decisiones (Ver. 5.2.1)</h1>
+            <p class="text-slate-600 mb-6">Gracias por participar. Por favor, ingresa tu código de participante y selecciona tu grupo para comenzar.</p>
             <div class="max-w-xs mx-auto mb-6 text-left">
                 <label class="block text-sm font-medium text-slate-700 mb-1">ID del Participante:</label>
                 <input type="text" id="participant-id" class="w-full border border-slate-300 rounded-lg p-2 focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none" placeholder="Ej. SUJ-01">
@@ -81,10 +85,10 @@
         <!-- PANTALLA DE INDUCCIÓN EMOCIONAL -->
         <div id="screen-induction" class="hidden fade-in text-center">
             <h2 class="text-2xl font-bold text-amber-900 mb-4">Actividad de Imaginación</h2>
-            <div id="induction-text" class="text-slate-700 bg-slate-50 p-6 rounded-lg mb-6 border border-slate-200 text-left italic">
-                <!-- Se llena por JS -->
+            <div id="induction-text" class="text-slate-700 bg-slate-50 p-6 rounded-lg mb-6 border border-slate-200 text-left">
+                <!-- Se llena por JS el iFrame de YouTube -->
             </div>
-            <p class="text-sm text-slate-500 mb-4">Por favor, concéntrate en esta emoción durante al menos <span id="timer-display" class="font-bold text-amber-600">30</span> segundos antes de continuar.</p>
+            <p class="text-sm text-slate-500 mb-4">Por favor, observa atentamente el video durante al menos <span id="timer-display" class="font-bold text-amber-600">30</span> segundos antes de continuar.</p>
             <button id="btn-end-induction" onclick="endInduction()" class="bg-slate-400 text-white font-semibold py-2 px-8 rounded-lg shadow-md transition-colors cursor-not-allowed" disabled>Continuar</button>
         </div>
 
@@ -92,7 +96,7 @@
         <div id="screen-task" class="hidden fade-in flex flex-col items-center">
             <div class="w-full flex justify-between items-center mb-6 text-sm font-medium text-slate-500">
                 <span id="phase-indicator" class="uppercase tracking-wider">PREPRUEBA</span>
-                <span id="trial-counter">Ensayo 1 / 20</span>
+                <span id="trial-counter">Ensayo 1 / 40</span>
             </div>
 
             <!-- Estímulos Selectores -->
@@ -122,6 +126,7 @@
             </div>
         </div>
 
+        <!-- PANTALLA DE RETROALIMENTACIÓN -->
         <div id="screen-feedback" class="hidden fade-in flex flex-col items-center justify-center h-full">
             <h2 id="feedback-msg" class="text-4xl font-bold mb-4"></h2>
         </div>
@@ -294,8 +299,8 @@
             const btn = document.getElementById('btn-end-induction');
             const timerDisplay = document.getElementById('timer-display');
             
-            // ID del video de prueba para ambos grupos
-            let videoId = "dQw4w9WgXcQ";
+            // Asignación de video según grupo
+            let videoId = group === "1" ? "fko3W0-yb5A" : "dQw4w9WgXcQ"; 
             
             let textInstr = group === "1" 
                 ? "Por favor, observa atentamente el siguiente video (Grupo 1)." 
@@ -370,12 +375,10 @@
                 em = pairEM.a;
                 ecoTarget = pairEM.b;
 
-                // Distractores aleatorios
                 ecoDist1 = getRandomElement(categories[getRandomElement(categoryKeys)]);
                 do { ecoDist2 = getRandomElement(categories[getRandomElement(categoryKeys)]); } while (ecoDist2 === ecoDist1 || ecoDist2 === ecoTarget);
 
             } else if (relationType === 'Diferencia Total') {
-                // Todo de categorías distintas
                 let catES1 = getRandomElement(categoryKeys);
                 let catES2; do { catES2 = getRandomElement(categoryKeys); } while (catES2 === catES1);
                 let catEM; do { catEM = getRandomElement(categoryKeys); } while (catEM === catES1 || catEM === catES2);
@@ -386,13 +389,10 @@
                 em = getRandomElement(categories[catEM]);
                 ecoTarget = getRandomElement(categories[catTarget]);
 
-                // Distractor 1: Semejanza a EM
                 do { ecoDist1 = getRandomElement(categories[catEM]); } while (ecoDist1 === em);
-                // Distractor 2: Identidad a EM
                 ecoDist2 = em;
 
             } else {
-                // Semejanza o Identidad
                 let esCatKey = getRandomElement(categoryKeys);
                 let esCategory = categories[esCatKey];
                 
@@ -435,7 +435,6 @@
         function renderTrial() {
             const trial = currentPhaseTrials[currentTrialIndex];
             
-            // Actualizar visualmente el indicador de fase y el contador
             document.getElementById('phase-indicator').innerText = phases[currentPhaseIndex].title;
             document.getElementById('trial-counter').innerText = `Ensayo ${currentTrialIndex + 1} / ${currentPhaseTrials.length}`;
             
@@ -465,7 +464,6 @@
             const reactionTime = performance.now() - trialStartTime;
             const isCorrect = selectedEco.isTarget;
 
-            // Corrección: Enviar como texto exacto ("1 (Sí)" / "0 (No)") para evitar errores de fecha en Google Sheets
             experimentData.push({
                 Participant_ID: participantId,
                 Group: group === "1" ? "1" : "2",
@@ -483,7 +481,6 @@
 
             hideAllScreens();
 
-            // Evaluar si la fase lleva retroalimentación (Entrenamiento)
             if (phases[currentPhaseIndex].feedback) {
                 const feedbackScreen = document.getElementById('screen-feedback');
                 const feedbackMsg = document.getElementById('feedback-msg');
@@ -495,19 +492,31 @@
                 if (isCorrect) {
                     feedbackMsg.innerText = "¡Correcto!";
                     feedbackMsg.className = "text-5xl font-bold text-emerald-500";
-                    audioCorrect.currentTime = 0; // Reiniciar audio por si ya sonó antes
-                    audioCorrect.play();
+                    // Try-catch evita que el navegador se congele si bloquea el audio
+                    try {
+                        audioCorrect.currentTime = 0;
+                        let playPromise = audioCorrect.play();
+                        if (playPromise !== undefined) {
+                            playPromise.catch(error => console.log("Navegador bloqueó audio de éxito", error));
+                        }
+                    } catch(e) { console.log(e); }
                 } else {
                     feedbackMsg.innerText = "Incorrecto";
                     feedbackMsg.className = "text-5xl font-bold text-red-500";
-                    audioIncorrect.currentTime = 0;
-                    audioIncorrect.play();
+                    // Try-catch evita que el navegador se congele si bloquea el audio
+                    try {
+                        audioIncorrect.currentTime = 0;
+                        let playPromise = audioIncorrect.play();
+                        if (playPromise !== undefined) {
+                            playPromise.catch(error => console.log("Navegador bloqueó audio de error", error));
+                        }
+                    } catch(e) { console.log(e); }
                 }
 
+                // El temporizador avanza aunque el audio haya fallado
                 setTimeout(() => {
-                    // Detener audios para que no se encimen con el siguiente ensayo
-                    audioCorrect.pause();
-                    audioIncorrect.pause();
+                    try { audioCorrect.pause(); } catch(e) {}
+                    try { audioIncorrect.pause(); } catch(e) {}
                     
                     feedbackScreen.classList.add('hidden');
                     document.getElementById('screen-iti').classList.remove('hidden');
@@ -515,7 +524,6 @@
                 }, 1000); 
 
             } else {
-                // Sin retroalimentación (Preprueba, Postprueba)
                 document.getElementById('screen-iti').classList.remove('hidden');
                 setTimeout(nextTrial, 500);
             }
@@ -545,23 +553,18 @@
             const loading = document.getElementById('sending-status');
             const success = document.getElementById('success-status');
             
-            // Mostrar estado de carga
             btn.classList.add('hidden');
             loading.classList.remove('hidden');
             loading.classList.add('flex');
 
             try {
-                // Enviar datos usando fetch (POST)
                 await fetch(GOOGLE_APP_URL, {
                     method: 'POST',
-                    mode: 'no-cors', // Evita bloqueos de seguridad del navegador (CORS)
-                    headers: {
-                        'Content-Type': 'text/plain;charset=utf-8',
-                    },
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                     body: JSON.stringify(experimentData)
                 });
 
-                // Simular un poco de tiempo para asegurar que el usuario vea la animación
                 setTimeout(() => {
                     loading.classList.remove('flex');
                     loading.classList.add('hidden');
@@ -573,7 +576,6 @@
                 console.error("Error al enviar:", error);
                 alert("Hubo un problema de conexión al guardar los datos. Por favor intenta darle al botón nuevamente.");
                 
-                // Mostrar botón de nuevo si falla
                 loading.classList.remove('flex');
                 loading.classList.add('hidden');
                 btn.classList.remove('hidden');
