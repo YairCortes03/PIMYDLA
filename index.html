@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Experimento: Igualación a la Muestra (Ver. 3)</title>
+    <title>Experimento: Igualación a la Muestra (Ver. 4)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #f3e8ff; } /* Fondo morado claro v3 */
+        body { font-family: 'Inter', sans-serif; background-color: #fef9c3; } /* Fondo amarillo claro v4 */
         
         .emoji-box {
             display: flex;
@@ -25,7 +25,7 @@
         }
         
         .emoji-box.clickable { cursor: pointer; }
-        .emoji-box.clickable:hover { border-color: #9333ea; transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
+        .emoji-box.clickable:hover { border-color: #d97706; transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
         .emoji-box.clickable:active { transform: translateY(0); }
         
         .es-container { display: flex; gap: 20px; justify-content: center; margin-bottom: 30px; }
@@ -37,50 +37,50 @@
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
         /* Spinner para intervalos entre ensayos */
-        .loader { border: 4px solid #f3f3f3; border-top: 4px solid #9333ea; border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; margin: 0 auto;}
+        .loader { border: 4px solid #f3f3f3; border-top: 4px solid #d97706; border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; margin: 0 auto;}
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body class="text-slate-800 h-screen flex flex-col items-center justify-center p-4">
 
-    <div id="app-container" class="w-full max-w-2xl bg-white rounded-2xl shadow-xl p-8 relative overflow-hidden min-h-[500px] flex flex-col justify-center border-t-8 border-purple-600">
+    <div id="app-container" class="w-full max-w-2xl bg-white rounded-2xl shadow-xl p-8 relative overflow-hidden min-h-[500px] flex flex-col justify-center border-t-8 border-amber-500">
         
         <!-- PANTALLA DE INICIO -->
         <div id="screen-intro" class="text-center fade-in">
-            <h1 class="text-3xl font-bold text-purple-900 mb-4">Estudio de Toma de Decisiones (Ver. 3)</h1>
+            <h1 class="text-3xl font-bold text-amber-900 mb-4">Estudio de Toma de Decisiones (Ver. 4)</h1>
             <p class="text-slate-600 mb-6">Gracias por participar. Por favor, ingresa tu código de participante y selecciona tu grupo para comenzar.</p>
             <div class="max-w-xs mx-auto mb-6 text-left">
                 <label class="block text-sm font-medium text-slate-700 mb-1">ID del Participante:</label>
-                <input type="text" id="participant-id" class="w-full border border-slate-300 rounded-lg p-2 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none" placeholder="Ej. SUJ-01">
+                <input type="text" id="participant-id" class="w-full border border-slate-300 rounded-lg p-2 focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none" placeholder="Ej. SUJ-01">
             </div>
             <div class="max-w-xs mx-auto mb-8 text-left">
                 <label class="block text-sm font-medium text-slate-700 mb-1">Grupo Experimental:</label>
-                <select id="group-select" class="w-full border border-slate-300 rounded-lg p-2 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none">
+                <select id="group-select" class="w-full border border-slate-300 rounded-lg p-2 focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none">
                     <option value="">Selecciona un grupo...</option>
-                    <option value="Tristeza">Grupo 1 (Tristeza)</option>
-                    <option value="Felicidad">Grupo 2 (Felicidad)</option>
+                    <option value="1">Grupo 1</option>
+                    <option value="2">Grupo 2</option>
                 </select>
             </div>
-            <button onclick="startExperiment()" class="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-8 rounded-lg shadow-md transition-colors">Comenzar</button>
+            <button onclick="startExperiment()" class="bg-amber-500 hover:bg-amber-600 text-white font-semibold py-2 px-8 rounded-lg shadow-md transition-colors">Comenzar</button>
             <p id="error-msg" class="text-red-500 text-sm mt-4 hidden">Por favor completa todos los campos.</p>
         </div>
 
         <!-- PANTALLA DE INSTRUCCIONES -->
         <div id="screen-instructions" class="hidden fade-in text-center">
-            <h2 id="inst-title" class="text-2xl font-bold text-purple-900 mb-4">Fase 1: Preprueba</h2>
+            <h2 id="inst-title" class="text-2xl font-bold text-amber-900 mb-4">Fase 1: Preprueba</h2>
             <div id="inst-text" class="text-slate-600 mb-8 text-left space-y-3">
                 <!-- Se llena por JS -->
             </div>
-            <button onclick="startPhase()" class="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-8 rounded-lg shadow-md transition-colors">Iniciar Ensayos</button>
+            <button onclick="startPhase()" class="bg-amber-500 hover:bg-amber-600 text-white font-semibold py-2 px-8 rounded-lg shadow-md transition-colors">Iniciar Ensayos</button>
         </div>
 
         <!-- PANTALLA DE INDUCCIÓN EMOCIONAL -->
         <div id="screen-induction" class="hidden fade-in text-center">
-            <h2 class="text-2xl font-bold text-purple-900 mb-4">Actividad de Imaginación</h2>
+            <h2 class="text-2xl font-bold text-amber-900 mb-4">Actividad de Imaginación</h2>
             <div id="induction-text" class="text-slate-700 bg-slate-50 p-6 rounded-lg mb-6 border border-slate-200 text-left italic">
                 <!-- Se llena por JS -->
             </div>
-            <p class="text-sm text-slate-500 mb-4">Por favor, concéntrate en esta emoción durante al menos <span id="timer-display" class="font-bold text-purple-600">30</span> segundos antes de continuar.</p>
+            <p class="text-sm text-slate-500 mb-4">Por favor, concéntrate en esta emoción durante al menos <span id="timer-display" class="font-bold text-amber-600">30</span> segundos antes de continuar.</p>
             <button id="btn-end-induction" onclick="endInduction()" class="bg-slate-400 text-white font-semibold py-2 px-8 rounded-lg shadow-md transition-colors cursor-not-allowed" disabled>Continuar</button>
         </div>
 
@@ -118,19 +118,23 @@
             </div>
         </div>
 
+        <div id="screen-feedback" class="hidden fade-in flex flex-col items-center justify-center h-full">
+            <h2 id="feedback-msg" class="text-4xl font-bold mb-4"></h2>
+        </div>
+
         <!-- PANTALLA DE INTERVALO ENTRE ENSAYOS (ITI) -->
         <div id="screen-iti" class="hidden text-center flex flex-col justify-center h-full">
-            <div class="loader border-t-purple-600"></div>
+            <div class="loader border-t-amber-500"></div>
         </div>
 
         <!-- PANTALLA FINAL -->
         <div id="screen-end" class="hidden fade-in text-center">
-            <h2 class="text-3xl font-bold text-purple-600 mb-4">¡Experimento Finalizado!</h2>
+            <h2 class="text-3xl font-bold text-amber-600 mb-4">¡Experimento Finalizado!</h2>
             <p class="text-slate-600 mb-8">Muchas gracias por tu participación. Tu contribución es muy valiosa para nuestra investigación.</p>
             
             <div id="sending-status" class="hidden flex-col items-center justify-center mb-4">
-                <div class="loader mb-4 border-t-purple-600"></div>
-                <p class="text-purple-600 font-medium">Guardando resultados en la base de datos...</p>
+                <div class="loader mb-4 border-t-amber-500"></div>
+                <p class="text-amber-600 font-medium">Guardando resultados en la base de datos...</p>
             </div>
             
             <div id="success-status" class="hidden flex-col items-center justify-center mb-4 text-emerald-600">
@@ -141,7 +145,7 @@
                 <p class="text-sm text-slate-500 mt-2">Ya puedes cerrar esta ventana.</p>
             </div>
 
-            <button id="btn-send-data" onclick="sendDataToSheets()" class="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-8 rounded-lg shadow-md transition-colors flex items-center justify-center mx-auto gap-2">
+            <button id="btn-send-data" onclick="sendDataToSheets()" class="bg-amber-500 hover:bg-amber-600 text-white font-semibold py-3 px-8 rounded-lg shadow-md transition-colors flex items-center justify-center mx-auto gap-2">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                     <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" />
                 </svg>
@@ -155,7 +159,6 @@
         // --- URL DE GOOGLE APPS SCRIPT ---
         const GOOGLE_APP_URL = "https://script.google.com/macros/s/AKfycbzGlIn7hVl8McUimQo-ruilPqQ7_NH4yGjqmKSam9s7xBuwSJmLz0jVlMKmFpkj2luN/exec"; 
 
-        // --- BASE DE DATOS DE ESTÍMULOS ---
         const categories = {
             frutas: ['🍎', '🍌', '🍇', '🍉', '🍓', '🍒'],
             animales: ['🐶', '🐱', '🐭', '🦊', '🐻', '🐼'],
@@ -165,6 +168,20 @@
         };
 
         const categoryKeys = Object.keys(categories);
+
+        // Estímulos complementarios
+        const complementarios = [
+            {a: '🐶', b: '🦴'},
+            {a: '🌧️', b: '☂️'},
+            {a: '🚗', b: '⛽'},
+            {a: '🐒', b: '🍌'},
+            {a: '✏️', b: '📝'},
+            {a: '🧵', b: '🪡'},
+            {a: '🔒', b: '🔑'},
+            {a: '🦷', b: '🪥'},
+            {a: '✉️', b: '📮'},
+            {a: '🍳', b: '🥚'}
+        ];
 
         // --- ESTADO DEL EXPERIMENTO ---
         let participantId = "";
@@ -176,7 +193,6 @@
         let experimentData = [];
         let inductionTimerInterval = null;
 
-        // --- CONFIGURACIÓN DE FASES ---
         const phases = [
             {
                 id: "preprueba",
@@ -190,7 +206,7 @@
                     </ul>
                     <p><b>Tu tarea:</b> Elegir la opción de abajo que se relacione con la figura del centro de la <b>misma manera</b> en que se relacionan las dos figuras de arriba.</p>
                     <p>Hazlo lo más rápido y preciso que puedas. No se te informará si tu respuesta es correcta o incorrecta.</p>`,
-                numTrials: 20, // 10 Semejanza, 10 Identidad
+                trialsDef: { identidad: 10, semejanza: 10, diferencia: 10, complementariedad: 10 },
                 feedback: false
             },
             {
@@ -200,21 +216,22 @@
             },
             {
                 id: "entrenamiento",
-                title: "Fase 3: Tarea Principal",
+                title: "Fase 3: Entrenamiento",
                 instructions: `
                     <p>Continuaremos con la misma tarea anterior.</p>
                     <p>Recuerda: Debes elegir la figura de abajo que se relacione con la del centro, siguiendo el mismo principio que rige a las dos figuras de arriba.</p>
-                    <p>Sigue respondiendo lo más rápido y preciso que puedas. Al igual que antes, no se te informará si es correcto o incorrecto.</p>`,
-                numTrials: 40, // 20 Semejanza, 20 Identidad
-                feedback: false
+                    <p>En esta fase <b>sí se te informará</b> si tu respuesta fue correcta o incorrecta después de cada elección.</p>`,
+                trialsDef: { identidad: 20, semejanza: 20, diferencia: 0, complementariedad: 0 },
+                feedback: true
             },
             {
                 id: "postprueba",
                 title: "Fase 4: Postprueba",
                 instructions: `
                     <p>Esta es la última fase de la tarea.</p>
-                    <p>Las reglas son exactamente las mismas. Observa las figuras de arriba, analiza la muestra central y elige la respuesta correcta abajo.</p>`,
-                numTrials: 20, // 10 Semejanza, 10 Identidad
+                    <p>Las reglas son exactamente las mismas. Observa las figuras de arriba, analiza la muestra central y elige la respuesta correcta abajo.</p>
+                    <p>Al igual que en la primera fase, no se te informará si tu respuesta es correcta.</p>`,
+                trialsDef: { identidad: 10, semejanza: 10, diferencia: 10, complementariedad: 10 },
                 feedback: false
             }
         ];
@@ -252,8 +269,7 @@
             if (phase.type === "induction") {
                 setupInduction();
             } else {
-                // Generar ensayos para preprueba, entrenamiento o postprueba
-                currentPhaseTrials = generateTrials(phase.numTrials);
+                currentPhaseTrials = generateTrials(phase.trialsDef);
                 currentTrialIndex = 0;
                 
                 document.getElementById('inst-title').innerHTML = phase.title;
@@ -265,7 +281,6 @@
         function startPhase() {
             hideAllScreens();
             document.getElementById('screen-task').classList.remove('hidden');
-            document.getElementById('phase-indicator').innerText = phases[currentPhaseIndex].title;
             renderTrial();
         }
 
@@ -275,17 +290,16 @@
             const btn = document.getElementById('btn-end-induction');
             const timerDisplay = document.getElementById('timer-display');
             
-            // Textos adaptados para inducir emoción (Puedes editarlos para tu protocolo real)
-            if (group === "Tristeza") {
+            // Lógica basada en Grupo 1 y Grupo 2
+            if (group === "1") {
                 textEl.innerHTML = `Por favor, tómate un momento para recordar un evento reciente en tu vida que te haya causado una profunda <b>tristeza</b> o decepción. Piensa en dónde estabas, quién estaba contigo y cómo se sintió físicamente esa tristeza en tu cuerpo. Intenta revivir ese momento con el mayor detalle posible.`;
             } else {
                 textEl.innerHTML = `Por favor, tómate un momento para recordar un evento reciente en tu vida que te haya causado una profunda <b>alegría</b> o felicidad. Piensa en dónde estabas, quién estaba contigo y cómo se sintió físicamente esa felicidad en tu cuerpo. Intenta revivir ese momento con el mayor detalle posible.`;
             }
 
-            // Temporizador de 30 segundos (Ajustable)
             let timeLeft = 30; 
             btn.disabled = true;
-            btn.classList.remove('bg-indigo-600', 'hover:bg-indigo-700');
+            btn.classList.remove('bg-amber-500', 'hover:bg-amber-600');
             btn.classList.add('bg-slate-400', 'cursor-not-allowed');
             timerDisplay.innerText = timeLeft;
 
@@ -296,7 +310,7 @@
                     clearInterval(inductionTimerInterval);
                     btn.disabled = false;
                     btn.classList.remove('bg-slate-400', 'cursor-not-allowed');
-                    btn.classList.add('bg-purple-600', 'hover:bg-purple-700');
+                    btn.classList.add('bg-amber-500', 'hover:bg-amber-600');
                     btn.innerText = "Continuar a la siguiente fase";
                     timerDisplay.parentElement.innerHTML = "<span class='text-emerald-600 font-semibold'>Puedes continuar cuando estés listo(a).</span>";
                 }
@@ -318,60 +332,80 @@
             return array;
         }
 
-        function generateTrials(num) {
+        function generateTrials(trialsDef) {
             const trials = [];
-            const numIdentity = num / 2;
-            const numSimilarity = num / 2;
-
-            // Ensayos de Identidad
-            for (let i = 0; i < numIdentity; i++) {
-                trials.push(createSingleTrial('Identidad'));
-            }
-            // Ensayos de Semejanza
-            for (let i = 0; i < numSimilarity; i++) {
-                trials.push(createSingleTrial('Semejanza'));
-            }
+            for (let i = 0; i < trialsDef.identidad; i++) trials.push(createSingleTrial('Identidad'));
+            for (let i = 0; i < trialsDef.semejanza; i++) trials.push(createSingleTrial('Semejanza'));
+            for (let i = 0; i < trialsDef.diferencia; i++) trials.push(createSingleTrial('Diferencia Total'));
+            for (let i = 0; i < trialsDef.complementariedad; i++) trials.push(createSingleTrial('Complementariedad'));
             return shuffle(trials);
         }
 
         function createSingleTrial(relationType) {
-            // 1. Elegir categoría para los ES
-            let esCatKey = getRandomElement(categoryKeys);
-            let esCategory = categories[esCatKey];
-            
-            // 2. Elegir categoría para EM y ECO (Diferente a la de ES para evitar sesgos)
-            let emCatKey;
-            do { emCatKey = getRandomElement(categoryKeys); } while (emCatKey === esCatKey);
-            let emCategory = categories[emCatKey];
-
             let es1, es2, em, ecoTarget, ecoDist1, ecoDist2;
 
-            if (relationType === 'Identidad') {
-                es1 = getRandomElement(esCategory);
-                es2 = es1; // Identidad
+            if (relationType === 'Complementariedad') {
+                let pairES = getRandomElement(complementarios);
+                es1 = pairES.a;
+                es2 = pairES.b;
                 
-                em = getRandomElement(emCategory);
-                ecoTarget = em; // Respuesta correcta: Identidad
+                let pairEM;
+                do { pairEM = getRandomElement(complementarios); } while (pairEM === pairES);
+                em = pairEM.a;
+                ecoTarget = pairEM.b;
+
+                // Distractores aleatorios
+                ecoDist1 = getRandomElement(categories[getRandomElement(categoryKeys)]);
+                do { ecoDist2 = getRandomElement(categories[getRandomElement(categoryKeys)]); } while (ecoDist2 === ecoDist1 || ecoDist2 === ecoTarget);
+
+            } else if (relationType === 'Diferencia Total') {
+                // Todo de categorías distintas
+                let catES1 = getRandomElement(categoryKeys);
+                let catES2; do { catES2 = getRandomElement(categoryKeys); } while (catES2 === catES1);
+                let catEM; do { catEM = getRandomElement(categoryKeys); } while (catEM === catES1 || catEM === catES2);
+                let catTarget; do { catTarget = getRandomElement(categoryKeys); } while (catTarget === catES1 || catTarget === catES2 || catTarget === catEM);
+
+                es1 = getRandomElement(categories[catES1]);
+                es2 = getRandomElement(categories[catES2]);
+                em = getRandomElement(categories[catEM]);
+                ecoTarget = getRandomElement(categories[catTarget]);
+
+                // Distractor 1: Semejanza a EM
+                do { ecoDist1 = getRandomElement(categories[catEM]); } while (ecoDist1 === em);
+                // Distractor 2: Identidad a EM
+                ecoDist2 = em;
+
+            } else {
+                // Semejanza o Identidad
+                let esCatKey = getRandomElement(categoryKeys);
+                let esCategory = categories[esCatKey];
                 
-            } else { // Semejanza
-                es1 = getRandomElement(esCategory);
-                do { es2 = getRandomElement(esCategory); } while (es2 === es1); // Misma categoría, diferente ítem
-                
-                em = getRandomElement(emCategory);
-                do { ecoTarget = getRandomElement(emCategory); } while (ecoTarget === em); // Respuesta correcta: Semejanza
+                let emCatKey;
+                do { emCatKey = getRandomElement(categoryKeys); } while (emCatKey === esCatKey);
+                let emCategory = categories[emCatKey];
+
+                if (relationType === 'Identidad') {
+                    es1 = getRandomElement(esCategory);
+                    es2 = es1; 
+                    em = getRandomElement(emCategory);
+                    ecoTarget = em; 
+                } else { // Semejanza
+                    es1 = getRandomElement(esCategory);
+                    do { es2 = getRandomElement(esCategory); } while (es2 === es1);
+                    em = getRandomElement(emCategory);
+                    do { ecoTarget = getRandomElement(emCategory); } while (ecoTarget === em);
+                }
+
+                let d1CatKey;
+                do { d1CatKey = getRandomElement(categoryKeys); } while (d1CatKey === emCatKey || d1CatKey === esCatKey);
+                ecoDist1 = getRandomElement(categories[d1CatKey]);
+
+                let d2CatKey;
+                do { d2CatKey = getRandomElement(categoryKeys); } while (d2CatKey === emCatKey || d2CatKey === esCatKey || d2CatKey === d1CatKey);
+                ecoDist2 = getRandomElement(categories[d2CatKey]);
+
+                if (relationType === 'Semejanza') { ecoDist1 = em; }
             }
-
-            // Distractores (siempre se extraen de categorías distintas para forzar el control relacional)
-            let d1CatKey;
-            do { d1CatKey = getRandomElement(categoryKeys); } while (d1CatKey === emCatKey || d1CatKey === esCatKey);
-            ecoDist1 = getRandomElement(categories[d1CatKey]);
-
-            let d2CatKey;
-            do { d2CatKey = getRandomElement(categoryKeys); } while (d2CatKey === emCatKey || d2CatKey === esCatKey || d2CatKey === d1CatKey);
-            ecoDist2 = getRandomElement(categories[d2CatKey]);
-
-            // En el caso de semejanza, un buen distractor engañoso es poner la identidad literal
-            if (relationType === 'Semejanza') { ecoDist1 = em; }
 
             let ecos = [
                 { emoji: ecoTarget, isTarget: true },
@@ -385,23 +419,18 @@
         function renderTrial() {
             const trial = currentPhaseTrials[currentTrialIndex];
             
-            document.getElementById('trial-counter').innerText = `Ensayo ${currentTrialIndex + 1} / ${currentPhaseTrials.length}`;
-            
-            // Render ES
             document.getElementById('es-box').innerHTML = `
                 <div class="emoji-box">${trial.es1}</div>
                 <div class="emoji-box">${trial.es2}</div>
             `;
             
-            // Render EM
             document.getElementById('em-box').innerHTML = `
-                <div class="emoji-box border-purple-300 bg-purple-50">${trial.em}</div>
+                <div class="emoji-box border-amber-300 bg-amber-50">${trial.em}</div>
             `;
             
-            // Render ECO
             const ecoBox = document.getElementById('eco-box');
             ecoBox.innerHTML = '';
-            trial.ecos.forEach((eco, index) => {
+            trial.ecos.forEach((eco) => {
                 const btn = document.createElement('div');
                 btn.className = 'emoji-box clickable';
                 btn.innerText = eco.emoji;
@@ -416,10 +445,10 @@
             const reactionTime = performance.now() - trialStartTime;
             const isCorrect = selectedEco.isTarget;
 
-            // Guardar datos
+            // Corrección: Enviar como texto exacto ("1 (Sí)" / "0 (No)") para evitar errores de fecha en Google Sheets
             experimentData.push({
                 Participant_ID: participantId,
-                Group: group,
+                Group: group === "1" ? "1" : "2",
                 Phase: phases[currentPhaseIndex].id,
                 Trial_Num: currentTrialIndex + 1,
                 Relation: trial.relation,
@@ -428,26 +457,49 @@
                 EM: trial.em,
                 Target_Correct: trial.ecos.find(e => e.isTarget).emoji,
                 User_Answer: selectedEco.emoji,
-                Is_Correct: isCorrect ? 1 : 0,
+                Is_Correct: isCorrect ? "1 (Sí)" : "0 (No)",
                 Reaction_Time_ms: Math.round(reactionTime)
             });
 
-            // En este protocolo no hay feedback, pasamos directo al ITI (Inter-Trial Interval)
             hideAllScreens();
-            document.getElementById('screen-iti').classList.remove('hidden');
 
-            setTimeout(() => {
-                currentTrialIndex++;
-                if (currentTrialIndex < currentPhaseTrials.length) {
-                    hideAllScreens();
-                    document.getElementById('screen-task').classList.remove('hidden');
-                    renderTrial();
+            // Evaluar si la fase lleva retroalimentación (Entrenamiento)
+            if (phases[currentPhaseIndex].feedback) {
+                const feedbackScreen = document.getElementById('screen-feedback');
+                const feedbackMsg = document.getElementById('feedback-msg');
+                feedbackScreen.classList.remove('hidden');
+                
+                if (isCorrect) {
+                    feedbackMsg.innerText = "¡Correcto!";
+                    feedbackMsg.className = "text-5xl font-bold text-emerald-500";
                 } else {
-                    // Fin de la fase
-                    currentPhaseIndex++;
-                    loadPhase();
+                    feedbackMsg.innerText = "Incorrecto";
+                    feedbackMsg.className = "text-5xl font-bold text-red-500";
                 }
-            }, 500); // 500ms pantalla en blanco entre ensayos
+
+                setTimeout(() => {
+                    feedbackScreen.classList.add('hidden');
+                    document.getElementById('screen-iti').classList.remove('hidden');
+                    setTimeout(nextTrial, 500);
+                }, 1000); 
+
+            } else {
+                // Sin retroalimentación (Preprueba, Postprueba)
+                document.getElementById('screen-iti').classList.remove('hidden');
+                setTimeout(nextTrial, 500);
+            }
+        }
+
+        function nextTrial() {
+            currentTrialIndex++;
+            if (currentTrialIndex < currentPhaseTrials.length) {
+                hideAllScreens();
+                document.getElementById('screen-task').classList.remove('hidden');
+                renderTrial();
+            } else {
+                currentPhaseIndex++;
+                loadPhase();
+            }
         }
 
         function endExperiment() {
@@ -496,9 +548,6 @@
                 btn.classList.remove('hidden');
             }
         }
-    </script>
-</body>
-</html>
     </script>
 </body>
 </html>
