@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Experimento: Igualación a la Muestra (Ver. 7.1.1)</title>
+    <title>Experimento: Igualación a la Muestra (Ver. 7.2)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
     <style>
         body { font-family: 'Inter', sans-serif; background-color: #fef9c3; } /* Fondo amarillo claro v4 */
         
@@ -51,27 +52,28 @@
     <audio id="audio-correct" src="aplausos.mp3" preload="auto"></audio>
     <audio id="audio-incorrect" src="Sad distorted violin full.mp3" preload="auto"></audio>
 
-    <!-- Logos de la institución -->
-    <img src="Escudo-UNAM.png" alt="UNAM" class="absolute top-4 left-4 md:top-8 md:left-8 w-16 sm:w-20 md:w-28 object-contain -z-10">
+    <!-- Logos de la institución balanceados -->
+    <img src="Escudo-UNAM.png" alt="UNAM" class="absolute top-4 left-4 md:top-8 md:left-8 w-12 sm:w-16 md:w-20 object-contain -z-10">
     <img src="Escudo-FESI.png" alt="FESI" class="absolute top-4 right-4 md:top-8 md:right-8 w-16 sm:w-20 md:w-28 object-contain -z-10">
 
     <div id="app-container" class="w-full max-w-2xl bg-white rounded-2xl shadow-xl p-8 relative overflow-hidden min-h-[500px] flex flex-col justify-center border-t-8 border-amber-500 z-10">
         
         <!-- PANTALLA DE INICIO -->
         <div id="screen-intro" class="text-center fade-in">
-            <h1 class="text-3xl font-bold text-amber-900 mb-4">Estudio de Toma de Decisiones (Ver. 7.1.1)</h1>
+            <h1 class="text-3xl font-bold text-amber-900 mb-4">Estudio de Toma de Decisiones (Ver. 7.2)</h1>
             <p class="text-slate-600 mb-6">Gracias por participar. Por favor, ingresa tu código de participante y selecciona tu grupo para comenzar.</p>
             <div class="max-w-xs mx-auto mb-6 text-left">
                 <label class="block text-sm font-medium text-slate-700 mb-1">ID del Participante:</label>
                 <input type="text" id="participant-id" class="w-full border border-slate-300 rounded-lg p-2 focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none" placeholder="Ej. SUJ-01">
             </div>
+            
             <div class="max-w-xs mx-auto mb-8 text-left">
                 <label class="block text-sm font-medium text-slate-700 mb-1">Grupo Experimental:</label>
                 <select id="group-select" class="w-full border border-slate-300 rounded-lg p-2 focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none">
                     <option value="">Selecciona un grupo...</option>
-                    <option value="1">Grupo 1 (Tristeza)</option>
-                    <option value="2">Grupo 2 (Felicidad)</option>
-                    <option value="3">Grupo 3 (Control)</option>
+                    <option value="1">Grupo 1</option>
+                    <option value="2">Grupo 2</option>
+                    <option value="3">Grupo 3</option>
                 </select>
             </div>
             <button onclick="startExperiment()" class="bg-amber-500 hover:bg-amber-600 text-white font-semibold py-2 px-8 rounded-lg shadow-md transition-colors">Comenzar</button>
@@ -194,7 +196,7 @@
         const GOOGLE_APP_URL = "https://script.google.com/macros/s/AKfycbzGlIn7hVl8McUimQo-ruilPqQ7_NH4yGjqmKSam9s7xBuwSJmLz0jVlMKmFpkj2luN/exec"; 
 
         // ========================================================================
-        // === BASES DE DATOS DE ENSAYOS FIJOS (VERSIÓN 7.0) ===
+        // === BASES DE DATOS DE ENSAYOS FIJOS ===
         // ========================================================================
 
         const ensayosPreprueba = [
@@ -219,6 +221,7 @@
             /*19*/ { relation: 'Diferencia', es1: '🌲', es2: '🏙️', em: '🐛', c1: '💚', c2: '🐸', c3: '🐹', c4: '🩰', target: '🩰' },
             /*20*/ { relation: 'Complementariedad', es1: '📩', es2: '📪', em: '🎨', c1: '🖌️', c2: '📖', c3: '👁️', c4: '🎨', target: '🖌️' },
             /*21*/ { relation: 'Diferencia', es1: '🏫', es2: '🚗', em: '🫤', c1: '😭', c2: '🥹', c3: '😡', c4: '🎨', target: '🎨' },
+            
             /*22*/ { relation: 'Semejanza en Color', es1: '🦇', es2: '🟫', em: '💜', c1: '🪻', c2: '🌹', c3: '❤️', c4: '🟨', target: '🪻' },
             /*23*/ { relation: 'Semejanza en Color', es1: '😦', es2: '⚠️', em: '🤢', c1: '🤮', c2: '💩', c3: '💜', c4: '💚', target: '💚' },
             /*24*/ { relation: 'Complementariedad', es1: '🧹', es2: '🧽', em: '💻', c1: '📺', c2: '🖱️', c3: '🎮', c4: '💻', target: '🖱️' },
@@ -261,11 +264,12 @@
             /*18*/ { relation: 'Identidad', es1: '🌲', es2: '🌲', em: '📱', c1: '👕', c2: '⌚', c3: '🚀', c4: '📱', target: '📱' },
             /*19*/ { relation: 'Semejanza en color', es1: '🍎', es2: '🍓', em: '🌸', c1: '🍋', c2: '🐷', c3: '🫐', c4: '🍏', target: '🐷' },
             /*20*/ { relation: 'Semejanza en color', es1: '🥥', es2: '🏐', em: '🍆', c1: '🐻', c2: '🌸', c3: '🍏', c4: '🍇', target: '🍇' },
+            
             /*21*/ { relation: 'Identidad', es1: '🚗', es2: '🚗', em: '🐶', c1: '🍔', c2: '⚽', c3: '🎸', c4: '🐶', target: '🐶' },
             /*22*/ { relation: 'Semejanza en color', es1: '🍆', es2: '🍇', em: '🍊', c1: '🐻', c2: '🏀', c3: '🥥', c4: '🌑', target: '🏀' },
             /*23*/ { relation: 'Identidad', es1: '⌚', es2: '⌚', em: '👕', c1: '👕', c2: '🐶', c3: '🚗', c4: '🚀', target: '👕' },
             /*24*/ { relation: 'Identidad', es1: '📱', es2: '📱', em: '🍔', c1: '🌲', c2: '⌚', c3: '👕', c4: '🍔', target: '🍔' },
-            /*25*/ { relation: 'Semejanza en color', es1: '🍏', es2: '🐸', em: '🍋', c1: '🍌', c2: '🫐', c3: '🍆', c4: '🌑', target: '🍌' },
+            /*25*/ { relation: 'Semejanza en color', es1: '🍏', es2: '🐸', em: '🍋', c1: '🍌', c2: '🫐', c3: '🍆', c4: '🍊', target: '🍌' },
             /*26*/ { relation: 'Semejanza en color', es1: '🥥', es2: '🏐', em: '🍆', c1: '🐻', c2: '🌸', c3: '🍊', c4: '🍇', target: '🍇' },
             /*27*/ { relation: 'Identidad', es1: '🍔', es2: '🍔', em: '⚽', c1: '⚽', c2: '👕', c3: '📱', c4: '🌲', target: '⚽' },
             /*28*/ { relation: 'Semejanza en color', es1: '🌸', es2: '🐷', em: '🐻', c1: '🍎', c2: '🍋', c3: '🚪', c4: '🍏', target: '🚪' },
@@ -304,6 +308,7 @@
             /*18*/ { relation: 'Diferencia', es1: '👴', es2: '🎸', em: '🐢', c1: '🐇', c2: '🐢', c3: '👗', c4: '🐸', target: '👗' },
             /*19*/ { relation: 'Igualdad', es1: '🍇', es2: '🍇', em: '🍓', c1: '⛅', c2: '🏙️', c3: '🍓', c4: '📞', target: '🍓' },
             /*20*/ { relation: 'Semejanza en Color', es1: '🚗', es2: '🚒', em: '🍏', c1: '🫐', c2: '🥬', c3: '🍆', c4: '🍒', target: '🥬' },
+            
             /*21*/ { relation: 'Semejanza en Color', es1: '🌻', es2: '☀️', em: '👖', c1: '📚', c2: '🍇', c3: '🧢', c4: '🧣', target: '🧢' },
             /*22*/ { relation: 'Complementariedad', es1: '👶', es2: '🍼', em: '🐶', c1: '🦴', c2: '🏸', c3: '🧽', c4: '🍂', target: '🦴' },
             /*23*/ { relation: 'Igualdad', es1: '🍔', es2: '🍔', em: '🍟', c1: '📖', c2: '🍟', c3: '🔥', c4: '🗑️', target: '🍟' },
@@ -325,8 +330,6 @@
             /*39*/ { relation: 'Diferencia', es1: '🌅', es2: '🍔', em: '🌱', c1: '🌲', c2: '🎷', c3: '🍂', c4: '🥕', target: '🎷' },
             /*40*/ { relation: 'Igualdad', es1: '👕', es2: '👕', em: '🩳', c1: '🍊', c2: '🏓', c3: '🪒', c4: '🩳', target: '🩳' }
         ];
-
-        // ========================================================================
 
         let participantId = "";
         let group = "";
@@ -419,7 +422,6 @@
                     setupInduction();
                 }
             } else {
-                // VERSIÓN 7.0: Se cargan los 4 comparativos y se revuelven al azar
                 currentPhaseTrials = phase.trials.map(t => ({
                     relation: t.relation,
                     es1: t.es1,
@@ -455,7 +457,7 @@
             const timerDisplay = document.getElementById('timer-display');
             
             // Video Tristeza (Grupo 1) vs Video Felicidad (Grupo 2)
-            let videoId = group === "1" ? "fko3W0-yb5A" : "dQw4w9WgXcQ"; 
+            let videoId = group === "1" ? "zefi8HG4edU" : "dQw4w9WgXcQ"; 
             
             textEl.innerHTML = `
                 <div class="relative w-full overflow-hidden rounded-lg shadow-md border border-slate-200" style="padding-top: 56.25%;">
@@ -468,7 +470,7 @@
                 </div>
             `;
 
-            let timeLeft = 30; // Segundos que deben esperar
+            let timeLeft = 30; // Segundos que deben esperar obligatoriamente
             btn.disabled = true;
             btn.classList.remove('bg-amber-500', 'hover:bg-amber-600');
             btn.classList.add('bg-slate-400', 'cursor-not-allowed');
