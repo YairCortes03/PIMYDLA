@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Experimento: Igualación a la Muestra (Ver. 6.1.1)</title>
+    <title>Experimento: Igualación a la Muestra (Ver. 7.0)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -13,24 +13,28 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 3rem;
+            font-size: 2.5rem;
             background-color: white;
             border: 2px solid #cbd5e1;
             border-radius: 12px;
-            width: 80px;
-            height: 80px;
+            width: 70px;
+            height: 70px;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
             transition: all 0.2s ease;
             user-select: none;
         }
         
+        @media (min-width: 640px) {
+            .emoji-box { width: 80px; height: 80px; font-size: 3rem; }
+        }
+
         .emoji-box.clickable { cursor: pointer; }
         .emoji-box.clickable:hover { border-color: #d97706; transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
         .emoji-box.clickable:active { transform: translateY(0); }
         
         .es-container { display: flex; gap: 20px; justify-content: center; margin-bottom: 30px; }
         .em-container { display: flex; justify-content: center; margin-bottom: 30px; }
-        .eco-container { display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;}
+        .eco-container { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; max-width: 380px; margin: 0 auto;}
         
         .hidden { display: none !important; }
         .fade-in { animation: fadeIn 0.3s ease-in; }
@@ -47,7 +51,7 @@
     <audio id="audio-correct" src="aplausos.mp3" preload="auto"></audio>
     <audio id="audio-incorrect" src="Sad distorted violin full.mp3" preload="auto"></audio>
 
-    <!-- Logos de la institución (Mismo tamaño para ambos, parche 5.1) -->
+    <!-- Logos de la institución -->
     <img src="Escudo-UNAM.png" alt="UNAM" class="absolute top-4 left-4 md:top-8 md:left-8 w-16 sm:w-20 md:w-28 object-contain -z-10">
     <img src="Escudo-FESI.png" alt="FESI" class="absolute top-4 right-4 md:top-8 md:right-8 w-16 sm:w-20 md:w-28 object-contain -z-10">
 
@@ -55,7 +59,7 @@
         
         <!-- PANTALLA DE INICIO -->
         <div id="screen-intro" class="text-center fade-in">
-            <h1 class="text-3xl font-bold text-amber-900 mb-4">Estudio de Toma de Decisiones (Ver. 6.1.1)</h1>
+            <h1 class="text-3xl font-bold text-amber-900 mb-4">Estudio de Toma de Decisiones (Ver. 7.0)</h1>
             <p class="text-slate-600 mb-6">Gracias por participar. Por favor, ingresa tu código de participante y selecciona tu grupo para comenzar.</p>
             <div class="max-w-xs mx-auto mb-6 text-left">
                 <label class="block text-sm font-medium text-slate-700 mb-1">ID del Participante:</label>
@@ -65,9 +69,9 @@
                 <label class="block text-sm font-medium text-slate-700 mb-1">Grupo Experimental:</label>
                 <select id="group-select" class="w-full border border-slate-300 rounded-lg p-2 focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none">
                     <option value="">Selecciona un grupo...</option>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
+                    <option value="1">Grupo 1 (Tristeza)</option>
+                    <option value="2">Grupo 2 (Felicidad)</option>
+                    <option value="3">Grupo 3 (Control)</option>
                 </select>
             </div>
             <button onclick="startExperiment()" class="bg-amber-500 hover:bg-amber-600 text-white font-semibold py-2 px-8 rounded-lg shadow-md transition-colors">Comenzar</button>
@@ -90,10 +94,10 @@
                 <!-- Se llena por JS el iFrame de YouTube -->
             </div>
             <p class="text-sm text-slate-500 mb-4">Por favor, observa atentamente el video durante al menos <span id="timer-display" class="font-bold text-amber-600">30</span> segundos antes de continuar.</p>
-            <button id="btn-end-induction" onclick="showSurvey()" class="bg-slate-400 text-white font-semibold py-2 px-8 rounded-lg shadow-md transition-colors cursor-not-allowed" disabled>Continuar</button>
+            <button id="btn-end-induction" onclick="showSurvey()" class="bg-slate-400 text-white font-semibold py-2 px-8 rounded-lg shadow-md transition-colors cursor-not-allowed" disabled>Continuar a la Encuesta</button>
         </div>
 
-        <!-- PANTALLA DE ENCUESTA (NUEVA VER. 6.0) -->
+        <!-- PANTALLA DE ENCUESTA -->
         <div id="screen-survey" class="hidden fade-in text-center flex flex-col items-center justify-center h-full w-full">
             <h2 class="text-2xl font-bold text-amber-900 mb-6">¿Cómo te sientes en este momento?</h2>
             <p class="text-slate-600 mb-8">Por favor, selecciona la opción que mejor describa tu estado de ánimo actual tras ver el video.</p>
@@ -124,17 +128,13 @@
             <div class="w-full text-center mb-1">
                 <span class="text-xs font-semibold text-slate-400 uppercase">Estímulos Selectores</span>
             </div>
-            <div class="es-container" id="es-box">
-                <!-- Se llena por JS -->
-            </div>
+            <div class="es-container" id="es-box"></div>
 
             <!-- Estímulo Muestra -->
             <div class="w-full text-center mb-1">
                 <span class="text-xs font-semibold text-slate-400 uppercase">Estímulo Muestra</span>
             </div>
-            <div class="em-container" id="em-box">
-                 <!-- Se llena por JS -->
-            </div>
+            <div class="em-container" id="em-box"></div>
 
             <div class="w-full h-px bg-slate-200 mb-4"></div>
 
@@ -142,9 +142,7 @@
             <div class="w-full text-center mb-2">
                 <span class="text-xs font-semibold text-slate-400 uppercase">Elige el Estímulo Comparativo correcto</span>
             </div>
-            <div class="eco-container" id="eco-box">
-                 <!-- Se llena por JS -->
-            </div>
+            <div class="eco-container" id="eco-box"></div>
         </div>
 
         <!-- PANTALLA DE RETROALIMENTACIÓN -->
@@ -162,7 +160,7 @@
             <h2 class="text-3xl font-bold text-amber-600 mb-4">¡Experimento Finalizado!</h2>
             <p class="text-slate-600 mb-6">Muchas gracias por tu participación. Tu contribución es muy valiosa para nuestra investigación.</p>
             
-            <!-- CUADRO DE RESUMEN DE DATOS (NUEVO VER. 6.1) -->
+            <!-- CUADRO DE RESUMEN DE DATOS -->
             <div class="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-8 inline-block text-left shadow-sm">
                 <p class="text-sm text-amber-800 mb-1">Guarda estos datos para tu comprobante:</p>
                 <p class="font-semibold text-slate-800">ID: <span id="final-participant-id" class="font-bold text-amber-600"></span></p>
@@ -195,31 +193,141 @@
         // --- URL DE GOOGLE APPS SCRIPT ---
         const GOOGLE_APP_URL = "https://script.google.com/macros/s/AKfycbzGlIn7hVl8McUimQo-ruilPqQ7_NH4yGjqmKSam9s7xBuwSJmLz0jVlMKmFpkj2luN/exec"; 
 
-        const categories = {
-            frutas: ['🍎', '🍌', '🍇', '🍉', '🍓', '🍒'],
-            animales: ['🐶', '🐱', '🐭', '🦊', '🐻', '🐼'],
-            vehiculos: ['🚗', '🚕', '🚙', '🚌', '🚓', '🚑'],
-            deportes: ['⚽', '🏀', '🏈', '⚾', '🎾', '🏐'],
-            clima: ['☀️', '🌧️', '⛈️', '❄️', '☁️', '🌪️']
-        };
+        // ========================================================================
+        // === BASES DE DATOS DE ENSAYOS FIJOS (VERSIÓN 7.0) ===
+        // ========================================================================
 
-        const categoryKeys = Object.keys(categories);
-
-        // Estímulos complementarios lógicos
-        const complementarios = [
-            {a: '🐶', b: '🦴'},
-            {a: '🌧️', b: '☂️'},
-            {a: '🚗', b: '⛽'},
-            {a: '🐒', b: '🍌'},
-            {a: '✏️', b: '📝'},
-            {a: '🧵', b: '🪡'},
-            {a: '🔒', b: '🔑'},
-            {a: '🦷', b: '🪥'},
-            {a: '✉️', b: '📮'},
-            {a: '🍳', b: '🥚'}
+        const ensayosPreprueba = [
+            { relation: 'Complementariedad', es1: '🔒', es2: '🗝️', em: '🪥', c1: '🔥', c2: '🦷', c3: '🪵', c4: '🌪', target: '🦷' },
+            { relation: 'Diferencia', es1: '🌞', es2: '😍', em: '🌧️', c1: '🌈', c2: '🌕', c3: '❄️', c4: '💀', target: '💀' },
+            { relation: 'Complementariedad', es1: '🌧️', es2: '☂️', em: '🖊️', c1: '🌪', c2: '🏀', c3: '🧸', c4: '📄', target: '📄' },
+            { relation: 'Diferencia', es1: '🍩', es2: '💩', em: '🌮', c1: '🌶️', c2: '🧹', c3: '🍎', c4: '🥭', target: '🧹' },
+            { relation: 'Igualdad', es1: '🎁', es2: '🎁', em: '🖼', c1: '🧨', c2: '🏅', c3: '🎟', c4: '🖼', target: '🖼' },
+            { relation: 'Semejanza en Color', es1: '🐸', es2: '🐛', em: '☹️', c1: '🧥', c2: '🚖', c3: '🤢', c4: '😡', target: '🚖' },
+            { relation: 'Igualdad', es1: '🥭', es2: '🥭', em: '🥜', c1: '🍨', c2: '🍑', c3: '🍙', c4: '🥜', target: '🥜' },
+            { relation: 'Complementariedad', es1: '☕', es2: '🍩', em: '👟', c1: '🧦', c2: '🚲', c3: '👀', c4: '👤', target: '🧦' },
+            { relation: 'Complementariedad', es1: '🔩', es2: '⚙️', em: '🧵', c1: '🍊', c2: '🪡', c3: '🥞', c4: '⛸️', target: '🪡' },
+            { relation: 'Igualdad', es1: '🐬', es2: '🐬', em: '👠', c1: '❄️', c2: '🌂', c3: '🧤', c4: '👠', target: '👠' },
+            { relation: 'Igualdad', es1: '🦦', es2: '🦦', em: '🎈', c1: '🥏', c2: '🥅', c3: '♟️', c4: '🎈', target: '🎈' },
+            { relation: 'Semejanza en Color', es1: '🌊', es2: '💙', em: '🎀', c1: '🎗️', c2: '🍅', c3: '🐽', c4: '🤎', target: '🐽' },
+            { relation: 'Diferencia', es1: '🐶', es2: '🍞', em: '🚗', c1: '🚒', c2: '🚑', c3: '🚚', c4: '😰', target: '😰' },
+            { relation: 'Semejanza en Color', es1: '🩶', es2: '🔩', em: '🍊', c1: '💙', c2: '🔧', c3: '📙', c4: '💜', target: '📙' },
+            { relation: 'Igualdad', es1: '🎼', es2: '🎼', em: '📷', c1: '📸', c2: '🎛', c3: '🎧', c4: '📷', target: '📷' },
+            { relation: 'Igualdad', es1: '😷', es2: '😷', em: '😴', c1: '🌝', c2: '🕐', c3: '🛌', c4: '😴', target: '😴' },
+            { relation: 'Diferencia', es1: '🔩', es2: '🧹', em: '🌲', c1: '🐝', c2: '🌹', c3: '🌵', c4: '🎼', target: '🎼' },
+            { relation: 'Semejanza en Color', es1: '🐻‍❄️', es2: '⚪', em: '🐈‍⬛', c1: '🐈', c2: '🐦‍⬛', c3: '🐛', c4: '🐹', target: '🐦‍⬛' },
+            { relation: 'Diferencia', es1: '🌲', es2: '🏙️', em: '🐛', c1: '💚', c2: '🐸', c3: '🐹', c4: '🩰', target: '🩰' },
+            { relation: 'Complementariedad', es1: '📩', es2: '📪', em: '🎨', c1: '🖌️', c2: '📖', c3: '👁️', c4: '🖌️', target: '🖌️' },
+            { relation: 'Diferencia', es1: '🏫', es2: '🚗', em: '🫤', c1: '😭', c2: '🥹', c3: '😡', c4: '🎨', target: '🎨' },
+            { relation: 'Semejanza en Color', es1: '🦇', es2: '🟫', em: '💜', c1: '🪻', c2: '🌹', c3: '❤️', c4: '🟨', target: '🪻' },
+            { relation: 'Semejanza en Color', es1: '😦', es2: '⚠️', em: '🤢', c1: '🤮', c2: '💩', c3: '💚', c4: '💚', target: '💚' },
+            { relation: 'Complementariedad', es1: '🧹', es2: '🧽', em: '💻', c1: '📺', c2: '🖱️', c3: '🎮', c4: '🖱️', target: '🖱️' },
+            { relation: 'Igualdad', es1: '🐢', es2: '🐢', em: '🦖', c1: '🦕', c2: '🐊', c3: '🐉', c4: '🦖', target: '🦖' },
+            { relation: 'Diferencia', es1: '🏀', es2: '🥭', em: '👍', c1: '👀', c2: '🙌', c3: '👎', c4: '✊', target: '👀' },
+            { relation: 'Complementariedad', es1: '🌮', es2: '🌶️', em: '🥤', c1: '🍿', c2: '📺', c3: '📖', c4: '🍿', target: '🍿' },
+            { relation: 'Diferencia', es1: '🦇', es2: '☃️', em: '‼️', c1: '❌', c2: '🚳', c3: '🩷', c4: '⛔', target: '🩷' },
+            { relation: 'Complementariedad', es1: '⚽', es2: '🥅', em: '🎸', c1: '👹', c2: '🤘', c3: '🎤', c4: '🎤', target: '🎤' },
+            { relation: 'Diferencia', es1: '🍒', es2: '🩷', em: '🌼', c1: '⭐', c2: '💛', c3: '👟', c4: '❤️', target: '👟' },
+            { relation: 'Diferencia', es1: '🚲', es2: '🍔', em: '🌙', c1: '🌝', c2: '⚠️', c3: '☀️', c4: '⚾', target: '⚾' },
+            { relation: 'Igualdad', es1: '😭', es2: '😭', em: '⛄', c1: '☃️', c2: '🌡️', c3: '☁️', c4: '⛄', target: '⛄' },
+            { relation: 'Igualdad', es1: '🛼', es2: '🛼', em: '🥇', c1: '🥇', c2: '🏅', c3: '🥈', c4: '🎖️', target: '🥇' },
+            { relation: 'Semejanza en Color', es1: '📒', es2: '💛', em: '💋', c1: '🧠', c2: '🩴', c3: '💿', c4: '💎', target: '💿' },
+            { relation: 'Semejanza en Color', es1: '🍏', es2: '🫑', em: '🍇', c1: '🍒', c2: '🍏', c3: '🥕', c4: '🪻', target: '🪻' },
+            { relation: 'Semejanza en Color', es1: '🫁', es2: '🧠', em: '🥶', c1: '😨', c2: '🌞', c3: '🥵', c4: '💦', target: '💦' },
+            { relation: 'Complementariedad', es1: '💃', es2: '🎼', em: '🏹', c1: '🎷', c2: '🎯', c3: '⚾', c4: '🏹', target: '🎯' },
+            { relation: 'Semejanza en Color', es1: '❤️', es2: '💔', em: '🐤', c1: '🐈', c2: '🐅', c3: '🐯', c4: '🍇', target: '🐈' },
+            { relation: 'Igualdad', es1: '⛹️', es2: '⛹️', em: '🐷', c1: '🐷', c2: '🦄', c3: '🐽', c4: '🐖', target: '🐷' },
+            { relation: 'Complementariedad', es1: '⚓', es2: '⛵', em: '🐝', c1: '🌹', c2: '🐈', c3: '🌧️', c4: '🌹', target: '🌹' }
         ];
 
-        // --- ESTADO DEL EXPERIMENTO ---
+        const ensayosEntrenamiento = [
+            { relation: 'Semejanza en color', es1: '🌑', es2: '🐈‍⬛', em: '🥥', c1: '🌸', c2: '🍎', c3: '🏐', c4: '🐻', target: '🏐' },
+            { relation: 'Semejanza en color', es1: '🦐', es2: '🏀', em: '🐟', c1: '🥥', c2: '🌑', c3: '🐳', c4: '🍆', target: '🐳' },
+            { relation: 'Identidad', es1: '⚽', es2: '⚽', em: '🎸', c1: '🌲', c2: '🍔', c3: '📱', c4: '🎸', target: '🎸' },
+            { relation: 'Semejanza en color', es1: '🐟', es2: '🐳', em: '🍏', c1: '🥥', c2: '🍊', c3: '🐸', c4: '🍆', target: '🐸' },
+            { relation: 'Identidad', es1: '⌚', es2: '⌚', em: '👕', c1: '🚀', c2: '🚗', c3: '🐶', c4: '👕', target: '👕' },
+            { relation: 'Identidad', es1: '📱', es2: '📱', em: '🍔', c1: '👕', c2: '🌲', c3: '⌚', c4: '🍔', target: '🍔' },
+            { relation: 'Identidad', es1: '👕', es2: '👕', em: '🌲', c1: '⌚', c2: '🚀', c3: '🐶', c4: '🌲', target: '🌲' },
+            { relation: 'Identidad', es1: '🎸', es2: '🎸', em: '🚗', c1: '🚗', c2: '⚽', c3: '📱', c4: '🍔', target: '🚗' },
+            { relation: 'Semejanza en color', es1: '🐻', es2: '🚪', em: '🌑', c1: '🍋', c2: '🍎', c3: '🌸', c4: '🐈‍⬛', target: '🐈‍⬛' },
+            { relation: 'Semejanza en color', es1: '🍊', es2: '🏀', em: '🐟', c1: '🥥', c2: '🍆', c3: '🌑', c4: '🐳', target: '🐳' },
+            { relation: 'Semejanza en color', es1: '🐻', es2: '🚪', em: '🌑', c1: '🍎', c2: '🐈‍⬛', c3: '🍋', c4: '🌸', target: '🐈‍⬛' },
+            { relation: 'Identidad', es1: '⚽', es2: '⚽', em: '🎸', c1: '🎸', c2: '🌲', c3: '🍔', c4: '📱', target: '🎸' },
+            { relation: 'Identidad', es1: '🌲', es2: '🌲', em: '📱', c1: '👕', c2: '🚀', c3: '⌚', c4: '📱', target: '📱' },
+            { relation: 'Identidad', es1: '🚀', es2: '🚀', em: '⌚', c1: '⌚', c2: '🚗', c3: '🐶', c4: '🎸', target: '⌚' },
+            { relation: 'Identidad', es1: '👕', es2: '👕', em: '🌲', c1: '🐶', c2: '⌚', c3: '🚀', c4: '🌲', target: '🌲' },
+            { relation: 'Identidad', es1: '🐶', es2: '🐶', em: '🚀', c1: '🚗', c2: '⚽', c3: '🎸', c4: '🚀', target: '🚀' },
+            { relation: 'Semejanza en color', es1: '🌑', es2: '🐈‍⬛', em: '⚾', c1: '🌸', c2: '🏐', c3: '🐻', c4: '🍎', target: '🏐' },
+            { relation: 'Identidad', es1: '🌲', es2: '🌲', em: '📱', c1: '👕', c2: '⌚', c3: '🚀', c4: '📱', target: '📱' },
+            { relation: 'Semejanza en color', es1: '🍎', es2: '🍓', em: '🌸', c1: '🍋', c2: '🐷', c3: '🫐', c4: '🍏', target: '🐷' },
+            { relation: 'Semejanza en color', es1: '🥥', es2: '🏐', em: '🍆', c1: '🐻', c2: '🌸', c3: '🍏', c4: '🍇', target: '🍇' },
+            { relation: 'Identidad', es1: '🚗', es2: '🚗', em: '🐶', c1: '🍔', c2: '⚽', c3: '🎸', c4: '🐶', target: '🐶' },
+            { relation: 'Semejanza en color', es1: '🍆', es2: '🍇', em: '🍊', c1: '🐻', c2: '🏀', c3: '🥥', c4: '🌑', target: '🏀' },
+            { relation: 'Identidad', es1: '⌚', es2: '⌚', em: '👕', c1: '👕', c2: '🐶', c3: '🚗', c4: '🚀', target: '👕' },
+            { relation: 'Identidad', es1: '📱', es2: '📱', em: '🍔', c1: '🌲', c2: '⌚', c3: '👕', c4: '🍔', target: '🍔' },
+            { relation: 'Semejanza en color', es1: '🍏', es2: '🐸', em: '🍋', c1: '🍌', c2: '🫐', c3: '🍆', c4: '🍊', target: '🍌' },
+            { relation: 'Semejanza en color', es1: '🥥', es2: '🏐', em: '🍆', c1: '🐻', c2: '🌸', c3: '🍊', c4: '🍇', target: '🍇' },
+            { relation: 'Identidad', es1: '🍔', es2: '🍔', em: '⚽', c1: '⚽', c2: '👕', c3: '📱', c4: '🌲', target: '⚽' },
+            { relation: 'Semejanza en color', es1: '🌸', es2: '🐷', em: '🐻', c1: '🍎', c2: '🍋', c3: '🚪', c4: '🍏', target: '🚪' },
+            { relation: 'Semejanza en color', es1: '🍆', es2: '🍇', em: '🍊', c1: '🥥', c2: '🏀', c3: '🐻', c4: '🌑', target: '🏀' },
+            { relation: 'Semejanza en color', es1: '🍏', es2: '🐸', em: '🍋', c1: '🍌', c2: '🍆', c3: '🫐', c4: '🌑', target: '🍌' },
+            { relation: 'Semejanza en color', es1: '🐟', es2: '🐳', em: '🍏', c1: '🍊', c2: '🐸', c3: '🥥', c4: '🍆', target: '🐸' },
+            { relation: 'Identidad', es1: '🐶', es2: '🐶', em: '🚀', c1: '🎸', c2: '🚗', c3: '⚽', c4: '🚀', target: '🚀' },
+            { relation: 'Identidad', es1: '🚀', es2: '🚀', em: '⌚', c1: '🐶', c2: '🚗', c3: '🎸', c4: '⌚', target: '⌚' },
+            { relation: 'Semejanza en color', es1: '🍋', es2: '🍌', em: '🍎', c1: '🍓', c2: '🍏', c3: '🍊', c4: '🫐', target: '🍓' },
+            { relation: 'Semejanza en color', es1: '🍋', es2: '🍌', em: '🍎', c1: '🍊', c2: '🍏', c3: '🍓', c4: '🫐', target: '🍓' },
+            { relation: 'Identidad', es1: '🚗', es2: '🚗', em: '🐶', c1: '⚽', c2: '🍔', c3: '🎸', c4: '🐶', target: '🐶' },
+            { relation: 'Identidad', es1: '🎸', es2: '🎸', em: '🚗', c1: '🍔', c2: '⚽', c3: '📱', c4: '🚗', target: '🚗' },
+            { relation: 'Semejanza en color', es1: '🌸', es2: '🐷', em: '🐻', c1: '🍏', c2: '🍎', c3: '🚪', c4: '🍋', target: '🚪' },
+            { relation: 'Identidad', es1: '🍔', es2: '🍔', em: '⚽', c1: '👕', c2: '🌲', c3: '📱', c4: '⚽', target: '⚽' },
+            { relation: 'Semejanza en color', es1: '🍎', es2: '🍓', em: '🌸', c1: '🫐', c2: '🐷', c3: '🍋', c4: '🍏', target: '🐷' }
+        ];
+
+        const ensayosPostprueba = [
+            { relation: 'Complementariedad', es1: '🔒', es2: '🔑', em: '🌧️', c1: '☂️', c2: '🦩', c3: '🐭', c4: '🥩', target: '☂️' },
+            { relation: 'Complementariedad', es1: '🦶', es2: '👞', em: '👁️', c1: '🌻', c2: '🔥', c3: '👗', c4: '👓', target: '👓' },
+            { relation: 'Complementariedad', es1: '📝', es2: '✏️', em: '✉️', c1: '🟦', c2: '📮', c3: '👁️', c4: '🍊', target: '📮' },
+            { relation: 'Semejanza en Color', es1: '🍎', es2: '🍓', em: '🍋', c1: '🍌', c2: '🐶', c3: '🔄', c4: '👔', target: '🍌' },
+            { relation: 'Complementariedad', es1: '🐒', es2: '🍌', em: '🐭', c1: '🐺', c2: '🧀', c3: '🧊', c4: '🕶️', target: '🧀' },
+            { relation: 'Diferencia', es1: '🌞', es2: '👟', em: '🔥', c1: '🌺', c2: '💧', c3: '👂', c4: '🐱', target: '💧' },
+            { relation: 'Diferencia', es1: '⬆️', es2: '🔴', em: '⬅️', c1: '🐺', c2: '➡️', c3: '🌭', c4: '👂', target: '➡️' },
+            { relation: 'Semejanza en Color', es1: '🐸', es2: '🐢', em: '💧', c1: '🐳', c2: '🧴', c3: '🔐', c4: '🌭', target: '🐳' },
+            { relation: 'Complementariedad', es1: '🔨', es2: '🔩', em: '🧵', c1: '👊', c2: '🧹', c3: '🪡', c4: '🚎', target: '🪡' },
+            { relation: 'Igualdad', es1: '🔑', es2: '🔑', em: '🔒', c1: '↙️', c2: '🧀', c3: '🌙', c4: '🔒', target: '🔒' },
+            { relation: 'Diferencia', es1: '😊', es2: '🚗', em: '☀️', c1: '📒', c2: '🚐', c3: '🌧️', c4: '🗑️', target: '🌧️' },
+            { relation: 'Semejanza en Color', es1: '🍊', es2: '🏀', em: '🌑', c1: '🐈‍⬛', c2: '🌲', c3: '↖️', c4: '🌛', target: '🐈‍⬛' },
+            { relation: 'Igualdad', es1: '🐱', es2: '🐱', em: '🐶', c1: '🐞', c2: '👑', c3: '🧀', c4: '🐶', target: '🐶' },
+            { relation: 'Semejanza en Color', es1: '🐷', es2: '🌸', em: '☁️', c1: '🟦', c2: '🦩', c3: '🦢', c4: '👔', target: '🦢' },
+            { relation: 'Complementariedad', es1: '🦷', es2: '🪥', em: '💇', c1: '🍊', c2: '🥤', c3: '🪮', c4: '🥕', target: '🪮' },
+            { relation: 'Semejanza en Color', es1: '🍆', es2: '🍇', em: '🐻', c1: '🦁', c2: '🌧️', c3: '🔐', c4: '🚪', target: '🚪' },
+            { relation: 'Complementariedad', es1: '🛌', es2: '🛏️', em: '🍽️', c1: '🌻', c2: '🐰', c3: '🍴', c4: '🍎', target: '🍴' },
+            { relation: 'Diferencia', es1: '👴', es2: '🎸', em: '🐢', c1: '🐇', c2: '🌺', c3: '👗', c4: '🥤', target: '🐇' },
+            { relation: 'Igualdad', es1: '🍇', es2: '🍇', em: '🍓', c1: '⛅', c2: '🏙️', c3: '📞', c4: '🍓', target: '🍓' },
+            { relation: 'Semejanza en Color', es1: '🚗', es2: '🚒', em: '🍏', c1: '🫐', c2: '🥬', c3: '🌱', c4: '🍒', target: '🥬' },
+            { relation: 'Semejanza en Color', es1: '🌻', es2: '☀️', em: '👖', c1: '📚', c2: '🍇', c3: '🧢', c4: '🧣', target: '🧢' },
+            { relation: 'Complementariedad', es1: '👶', es2: '🍼', em: '🐶', c1: '🦴', c2: '🏸', c3: '🧽', c4: '🍂', target: '🦴' },
+            { relation: 'Igualdad', es1: '🍔', es2: '🍔', em: '🍟', c1: '📖', c2: '🔥', c3: '🗑️', c4: '🍟', target: '🍟' },
+            { relation: 'Igualdad', es1: '🎸', es2: '🎸', em: '🎹', c1: '🐰', c2: '🧴', c3: '🦚', c4: '🎹', target: '🎹' },
+            { relation: 'Complementariedad', es1: '🐝', es2: '🍯', em: '🐄', c1: '❄️', c2: '🥛', c3: '🕶️', c4: '🍊', target: '🥛' },
+            { relation: 'Igualdad', es1: '⚽', es2: '⚽', em: '🎾', c1: '🏙️', c2: '🏨', c3: '🧊', c4: '🎾', target: '🎾' },
+            { relation: 'Diferencia', es1: '😇', es2: '📱', em: '👍', c1: '🍅', c2: '🍿', c3: '👎', c4: '🌩️', target: '👎' },
+            { relation: 'Complementariedad', es1: '🎥', es2: '🍿', em: '🏕️', c1: '📒', c2: '⛅', c3: '⛺', c4: '🌱', target: '⛺' },
+            { relation: 'Semejanza en Color', es1: '🌳', es2: '🍀', em: '🍅', c1: '🌈', c2: '🌶️', c3: '🐭', c4: '🐶', target: '🌶️' },
+            { relation: 'Diferencia', es1: '🧊', es2: '📕', em: '🏜️', c1: '🔏', c2: '🏔️', c3: '🍿', c4: '🍖', target: '🏔️' },
+            { relation: 'Semejanza en Color', es1: '🐘', es2: '🦏', em: '⛄', c1: '🥚', c2: '🍂', c3: '🐱', c4: '🥥', target: '🥚' },
+            { relation: 'Igualdad', es1: '🚗', es2: '🚗', em: '🚌', c1: '🍊', c2: '🐝', c3: '☀️', c4: '🚌', target: '🚌' },
+            { relation: 'Semejanza en Color', es1: '🦊', es2: '🥕', em: '🎱', c1: '👖', c2: '🌱', c3: '🌺', c4: '🎩', target: '🎩' },
+            { relation: 'Diferencia', es1: '🌑', es2: '🍕', em: '⬛', c1: '🥚', c2: '🟥', c3: '⬜', c4: '🍎', target: '⬜' },
+            { relation: 'Diferencia', es1: '🔓', es2: '🌲', em: '🔈', c1: '🔊', c2: '🌛', c3: '🧀', c4: '🐇', target: '🔊' },
+            { relation: 'Diferencia', es1: '🏃', es2: '⌚', em: '🗣️', c1: '🌈', c2: '🎻', c3: '🌙', c4: '🤐', target: '🤐' },
+            { relation: 'Igualdad', es1: '🌞', es2: '🌞', em: '🌜', c1: '🐺', c2: '🏕️', c3: '🦊', c4: '🌜', target: '🌜' },
+            { relation: 'Igualdad', es1: '📘', es2: '📘', em: '📙', c1: '🏙️', c2: '📒', c3: '🧽', c4: '📙', target: '📙' },
+            { relation: 'Diferencia', es1: '🌅', es2: '🍔', em: '🌱', c1: '🌲', c2: '🎷', c3: '🍂', c4: '🥕', target: '🍂' },
+            { relation: 'Igualdad', es1: '👕', es2: '👕', em: '🩳', c1: '🍊', c2: '🏓', c3: '🪒', c4: '🩳', target: '🩳' }
+        ];
+
+        // ========================================================================
+
         let participantId = "";
         let group = "";
         let currentPhaseIndex = 0;
@@ -238,11 +346,11 @@
                     <ul class="list-disc pl-5">
                         <li>En la parte <b>superior</b> verás 2 figuras que guardan una relación entre sí.</li>
                         <li>En el <b>centro</b> verás una figura muestra.</li>
-                        <li>En la parte <b>inferior</b> verás 3 opciones.</li>
+                        <li>En la parte <b>inferior</b> verás 4 opciones.</li>
                     </ul>
                     <p><b>Tu tarea:</b> Elegir la opción de abajo que se relacione con la figura del centro de la <b>misma manera</b> en que se relacionan las dos figuras de arriba.</p>
                     <p>Hazlo lo más rápido y preciso que puedas. No se te informará si tu respuesta es correcta o incorrecta.</p>`,
-                trialsDef: { identidad: 10, semejanza: 10, diferencia: 10, complementariedad: 10 },
+                trials: ensayosPreprueba,
                 feedback: false
             },
             {
@@ -257,7 +365,7 @@
                     <p>Continuaremos con la misma tarea anterior.</p>
                     <p>Recuerda: Debes elegir la figura de abajo que se relacione con la del centro, siguiendo el mismo principio que rige a las dos figuras de arriba.</p>
                     <p>En esta fase <b>sí se te informará</b> si tu respuesta fue correcta o incorrecta después de cada elección.</p>`,
-                trialsDef: { identidad: 20, semejanza: 20, diferencia: 0, complementariedad: 0 },
+                trials: ensayosEntrenamiento,
                 feedback: true
             },
             {
@@ -267,7 +375,7 @@
                     <p>Esta es la última fase de la tarea.</p>
                     <p>Las reglas son exactamente las mismas. Observa las figuras de arriba, analiza la muestra central y elige la respuesta correcta abajo.</p>
                     <p>Al igual que en la primera fase, no se te informará si tu respuesta es correcta.</p>`,
-                trialsDef: { identidad: 10, semejanza: 10, diferencia: 10, complementariedad: 10 },
+                trials: ensayosPostprueba,
                 feedback: false
             }
         ];
@@ -304,15 +412,28 @@
 
             if (phase.type === "induction") {
                 if (group === "3") {
-                    // Si es grupo 3 (Control), salta el video y la encuesta automáticamente.
-                    currentPhaseIndex++;
+                    currentPhaseIndex++; // Saltar video si es Control
                     loadPhase();
                     return;
                 } else {
                     setupInduction();
                 }
             } else {
-                currentPhaseTrials = generateTrials(phase.trialsDef);
+                // VERSIÓN 7.0: Se cargan los 4 comparativos y se revuelven al azar
+                currentPhaseTrials = phase.trials.map(t => ({
+                    relation: t.relation,
+                    es1: t.es1,
+                    es2: t.es2,
+                    em: t.em,
+                    target: t.target,
+                    ecos: shuffle([
+                        { emoji: t.c1, isTarget: t.c1 === t.target },
+                        { emoji: t.c2, isTarget: t.c2 === t.target },
+                        { emoji: t.c3, isTarget: t.c3 === t.target },
+                        { emoji: t.c4, isTarget: t.c4 === t.target }
+                    ])
+                }));
+                
                 currentTrialIndex = 0;
                 
                 document.getElementById('inst-title').innerHTML = phase.title;
@@ -333,11 +454,10 @@
             const btn = document.getElementById('btn-end-induction');
             const timerDisplay = document.getElementById('timer-display');
             
-            // Asignación de video según grupo
+            // Video Tristeza (Grupo 1) vs Video Felicidad (Grupo 2)
             let videoId = group === "1" ? "fko3W0-yb5A" : "dQw4w9WgXcQ"; 
             
             textEl.innerHTML = `
-                <p class="mb-4 text-center font-medium text-slate-700">Por favor, observa atentamente el siguiente video.</p>
                 <div class="relative w-full overflow-hidden rounded-lg shadow-md border border-slate-200" style="padding-top: 56.25%;">
                     <iframe class="absolute top-0 left-0 w-full h-full" 
                             src="https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0" 
@@ -348,7 +468,7 @@
                 </div>
             `;
 
-            let timeLeft = 30; 
+            let timeLeft = 30; // Segundos que deben esperar
             btn.disabled = true;
             btn.classList.remove('bg-amber-500', 'hover:bg-amber-600');
             btn.classList.add('bg-slate-400', 'cursor-not-allowed');
@@ -362,7 +482,7 @@
                     btn.disabled = false;
                     btn.classList.remove('bg-slate-400', 'cursor-not-allowed');
                     btn.classList.add('bg-amber-500', 'hover:bg-amber-600');
-                    btn.innerText = "Continuar";
+                    btn.innerText = "Continuar a la Encuesta";
                     timerDisplay.parentElement.innerHTML = "<span class='text-emerald-600 font-semibold'>Puedes continuar cuando estés listo(a).</span>";
                 }
             }, 1000);
@@ -376,7 +496,6 @@
         function handleSurvey(emotion) {
             let newGroup = group;
             
-            // Reasignación basada en la encuesta (Control de manipulación)
             if (emotion === 'tristeza') {
                 newGroup = "1";
             } else if (emotion === 'felicidad') {
@@ -385,7 +504,7 @@
                 newGroup = "3";
             }
             
-            // Si el estado de ánimo obliga a cambiarlo de grupo, actualizamos sus datos previos
+            // Reasignación retroactiva si cambió de emoción
             if (newGroup !== group) {
                 group = newGroup;
                 experimentData.forEach(trial => {
@@ -393,98 +512,16 @@
                 });
             }
             
-            // Avanzamos a la fase de Entrenamiento
             currentPhaseIndex++;
             loadPhase();
         }
 
-        function getRandomInt(max) { return Math.floor(Math.random() * max); }
-        function getRandomElement(arr) { return arr[getRandomInt(arr.length)]; }
         function shuffle(array) {
             for (let i = array.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
                 [array[i], array[j]] = [array[j], array[i]];
             }
             return array;
-        }
-
-        function generateTrials(trialsDef) {
-            const trials = [];
-            for (let i = 0; i < trialsDef.identidad; i++) trials.push(createSingleTrial('Identidad'));
-            for (let i = 0; i < trialsDef.semejanza; i++) trials.push(createSingleTrial('Semejanza'));
-            for (let i = 0; i < trialsDef.diferencia; i++) trials.push(createSingleTrial('Diferencia Total'));
-            for (let i = 0; i < trialsDef.complementariedad; i++) trials.push(createSingleTrial('Complementariedad'));
-            return shuffle(trials);
-        }
-
-        function createSingleTrial(relationType) {
-            let es1, es2, em, ecoTarget, ecoDist1, ecoDist2;
-
-            if (relationType === 'Complementariedad') {
-                let pairES = getRandomElement(complementarios);
-                es1 = pairES.a;
-                es2 = pairES.b;
-                
-                let pairEM;
-                do { pairEM = getRandomElement(complementarios); } while (pairEM === pairES);
-                em = pairEM.a;
-                ecoTarget = pairEM.b;
-
-                ecoDist1 = getRandomElement(categories[getRandomElement(categoryKeys)]);
-                do { ecoDist2 = getRandomElement(categories[getRandomElement(categoryKeys)]); } while (ecoDist2 === ecoDist1 || ecoDist2 === ecoTarget);
-
-            } else if (relationType === 'Diferencia Total') {
-                let catES1 = getRandomElement(categoryKeys);
-                let catES2; do { catES2 = getRandomElement(categoryKeys); } while (catES2 === catES1);
-                let catEM; do { catEM = getRandomElement(categoryKeys); } while (catEM === catES1 || catEM === catES2);
-                let catTarget; do { catTarget = getRandomElement(categoryKeys); } while (catTarget === catES1 || catTarget === catES2 || catTarget === catEM);
-
-                es1 = getRandomElement(categories[catES1]);
-                es2 = getRandomElement(categories[catES2]);
-                em = getRandomElement(categories[catEM]);
-                ecoTarget = getRandomElement(categories[catTarget]);
-
-                do { ecoDist1 = getRandomElement(categories[catEM]); } while (ecoDist1 === em);
-                ecoDist2 = em;
-
-            } else {
-                let esCatKey = getRandomElement(categoryKeys);
-                let esCategory = categories[esCatKey];
-                
-                let emCatKey;
-                do { emCatKey = getRandomElement(categoryKeys); } while (emCatKey === esCatKey);
-                let emCategory = categories[emCatKey];
-
-                if (relationType === 'Identidad') {
-                    es1 = getRandomElement(esCategory);
-                    es2 = es1; 
-                    em = getRandomElement(emCategory);
-                    ecoTarget = em; 
-                } else { // Semejanza
-                    es1 = getRandomElement(esCategory);
-                    do { es2 = getRandomElement(esCategory); } while (es2 === es1);
-                    em = getRandomElement(emCategory);
-                    do { ecoTarget = getRandomElement(emCategory); } while (ecoTarget === em);
-                }
-
-                let d1CatKey;
-                do { d1CatKey = getRandomElement(categoryKeys); } while (d1CatKey === emCatKey || d1CatKey === esCatKey);
-                ecoDist1 = getRandomElement(categories[d1CatKey]);
-
-                let d2CatKey;
-                do { d2CatKey = getRandomElement(categoryKeys); } while (d2CatKey === emCatKey || d2CatKey === esCatKey || d2CatKey === d1CatKey);
-                ecoDist2 = getRandomElement(categories[d2CatKey]);
-
-                if (relationType === 'Semejanza') { ecoDist1 = em; }
-            }
-
-            let ecos = [
-                { emoji: ecoTarget, isTarget: true },
-                { emoji: ecoDist1, isTarget: false },
-                { emoji: ecoDist2, isTarget: false }
-            ];
-
-            return { relation: relationType, es1: es1, es2: es2, em: em, ecos: shuffle(ecos) };
         }
 
         function renderTrial() {
@@ -528,7 +565,7 @@
                 ES1: trial.es1,
                 ES2: trial.es2,
                 EM: trial.em,
-                Target_Correct: trial.ecos.find(e => e.isTarget).emoji,
+                Target_Correct: trial.target,
                 User_Answer: selectedEco.emoji,
                 Is_Correct: isCorrect ? "1 (Sí)" : "0 (No)",
                 Reaction_Time_ms: Math.round(reactionTime)
@@ -549,24 +586,17 @@
                     feedbackMsg.className = "text-5xl font-bold text-emerald-500";
                     try {
                         audioCorrect.currentTime = 0;
-                        let playPromise = audioCorrect.play();
-                        if (playPromise !== undefined) {
-                            playPromise.catch(error => console.log("Navegador bloqueó audio", error));
-                        }
-                    } catch(e) { console.log("Error de audio:", e); }
+                        audioCorrect.play().catch(e => console.log("Audio bloqueado"));
+                    } catch(e) {}
                 } else {
                     feedbackMsg.innerText = "Incorrecto";
                     feedbackMsg.className = "text-5xl font-bold text-red-500";
                     try {
                         audioIncorrect.currentTime = 0;
-                        let playPromise = audioIncorrect.play();
-                        if (playPromise !== undefined) {
-                            playPromise.catch(error => console.log("Navegador bloqueó audio", error));
-                        }
-                    } catch(e) { console.log("Error de audio:", e); }
+                        audioIncorrect.play().catch(e => console.log("Audio bloqueado"));
+                    } catch(e) {}
                 }
 
-                // Esperar 3 segundos en la retroalimentación
                 setTimeout(() => {
                     try { audioCorrect.pause(); } catch(e) {}
                     try { audioIncorrect.pause(); } catch(e) {}
@@ -574,7 +604,7 @@
                     feedbackScreen.classList.add('hidden');
                     document.getElementById('screen-iti').classList.remove('hidden');
                     setTimeout(nextTrial, 500);
-                }, 3000); 
+                }, 3000); // 3 Segundos de retroalimentación
 
             } else {
                 document.getElementById('screen-iti').classList.remove('hidden');
@@ -596,11 +626,8 @@
 
         function endExperiment() {
             hideAllScreens();
-            
-            // Inyectar los datos finales en el HTML antes de mostrar la pantalla (Ver. 6.1.1)
             document.getElementById('final-participant-id').innerText = participantId;
             document.getElementById('final-group').innerText = group;
-            
             document.getElementById('screen-end').classList.remove('hidden');
         }
 
@@ -632,8 +659,7 @@
                 
             } catch (error) {
                 console.error("Error al enviar:", error);
-                alert("Hubo un problema de conexión al guardar los datos. Por favor intenta darle al botón nuevamente.");
-                
+                alert("Hubo un problema de conexión al guardar los datos.");
                 loading.classList.remove('flex');
                 loading.classList.add('hidden');
                 btn.classList.remove('hidden');
