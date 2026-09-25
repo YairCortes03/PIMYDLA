@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Experimento: Igualación a la Muestra (Ver. 5.3.2)</title>
+    <title>Experimento: Igualación a la Muestra (Ver. 6.1.1)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -55,7 +55,7 @@
         
         <!-- PANTALLA DE INICIO -->
         <div id="screen-intro" class="text-center fade-in">
-            <h1 class="text-3xl font-bold text-amber-900 mb-4">Estudio de Toma de Decisiones (Ver. 5.3.2)</h1>
+            <h1 class="text-3xl font-bold text-amber-900 mb-4">Estudio de Toma de Decisiones (Ver. 6.1.1)</h1>
             <p class="text-slate-600 mb-6">Gracias por participar. Por favor, ingresa tu código de participante y selecciona tu grupo para comenzar.</p>
             <div class="max-w-xs mx-auto mb-6 text-left">
                 <label class="block text-sm font-medium text-slate-700 mb-1">ID del Participante:</label>
@@ -90,7 +90,27 @@
                 <!-- Se llena por JS el iFrame de YouTube -->
             </div>
             <p class="text-sm text-slate-500 mb-4">Por favor, observa atentamente el video durante al menos <span id="timer-display" class="font-bold text-amber-600">30</span> segundos antes de continuar.</p>
-            <button id="btn-end-induction" onclick="endInduction()" class="bg-slate-400 text-white font-semibold py-2 px-8 rounded-lg shadow-md transition-colors cursor-not-allowed" disabled>Continuar</button>
+            <button id="btn-end-induction" onclick="showSurvey()" class="bg-slate-400 text-white font-semibold py-2 px-8 rounded-lg shadow-md transition-colors cursor-not-allowed" disabled>Continuar</button>
+        </div>
+
+        <!-- PANTALLA DE ENCUESTA (NUEVA VER. 6.0) -->
+        <div id="screen-survey" class="hidden fade-in text-center flex flex-col items-center justify-center h-full w-full">
+            <h2 class="text-2xl font-bold text-amber-900 mb-6">¿Cómo te sientes en este momento?</h2>
+            <p class="text-slate-600 mb-8">Por favor, selecciona la opción que mejor describa tu estado de ánimo actual tras ver el video.</p>
+            <div class="flex gap-6 justify-center">
+                <button onclick="handleSurvey('tristeza')" class="flex flex-col items-center p-4 border-2 border-slate-200 rounded-xl hover:border-blue-500 hover:bg-blue-50 transition-all">
+                    <span class="text-5xl mb-2">😢</span>
+                    <span class="font-medium text-slate-700">Tristeza</span>
+                </button>
+                <button onclick="handleSurvey('neutral')" class="flex flex-col items-center p-4 border-2 border-slate-200 rounded-xl hover:border-slate-500 hover:bg-slate-50 transition-all">
+                    <span class="text-5xl mb-2">😐</span>
+                    <span class="font-medium text-slate-700">Neutral</span>
+                </button>
+                <button onclick="handleSurvey('felicidad')" class="flex flex-col items-center p-4 border-2 border-slate-200 rounded-xl hover:border-amber-500 hover:bg-amber-50 transition-all">
+                    <span class="text-5xl mb-2">😀</span>
+                    <span class="font-medium text-slate-700">Felicidad</span>
+                </button>
+            </div>
         </div>
 
         <!-- PANTALLA DE TAREA IMSO -->
@@ -140,8 +160,15 @@
         <!-- PANTALLA FINAL -->
         <div id="screen-end" class="hidden fade-in text-center">
             <h2 class="text-3xl font-bold text-amber-600 mb-4">¡Experimento Finalizado!</h2>
-            <p class="text-slate-600 mb-8">Muchas gracias por tu participación. Tu contribución es muy valiosa para nuestra investigación.</p>
+            <p class="text-slate-600 mb-6">Muchas gracias por tu participación. Tu contribución es muy valiosa para nuestra investigación.</p>
             
+            <!-- CUADRO DE RESUMEN DE DATOS (NUEVO VER. 6.1) -->
+            <div class="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-8 inline-block text-left shadow-sm">
+                <p class="text-sm text-amber-800 mb-1">Guarda estos datos para tu comprobante:</p>
+                <p class="font-semibold text-slate-800">ID: <span id="final-participant-id" class="font-bold text-amber-600"></span></p>
+                <p class="font-semibold text-slate-800">Grupo Final: <span id="final-group" class="font-bold text-amber-600"></span></p>
+            </div>
+
             <div id="sending-status" class="hidden flex-col items-center justify-center mb-4">
                 <div class="loader mb-4 border-t-amber-500"></div>
                 <p class="text-amber-600 font-medium">Guardando resultados en la base de datos...</p>
@@ -162,7 +189,6 @@
                 Enviar Resultados a la Base de Datos
             </button>
         </div>
-
     </div>
 
     <script>
@@ -278,7 +304,9 @@
 
             if (phase.type === "induction") {
                 if (group === "3") {
-                    endInduction(); // Grupo 3 salta la inducción
+                    // Si es grupo 3 (Control), salta el video y la encuesta automáticamente.
+                    currentPhaseIndex++;
+                    loadPhase();
                     return;
                 } else {
                     setupInduction();
@@ -334,13 +362,38 @@
                     btn.disabled = false;
                     btn.classList.remove('bg-slate-400', 'cursor-not-allowed');
                     btn.classList.add('bg-amber-500', 'hover:bg-amber-600');
-                    btn.innerText = "Continuar a la siguiente fase";
+                    btn.innerText = "Continuar";
                     timerDisplay.parentElement.innerHTML = "<span class='text-emerald-600 font-semibold'>Puedes continuar cuando estés listo(a).</span>";
                 }
             }, 1000);
         }
 
-        function endInduction() {
+        function showSurvey() {
+            hideAllScreens();
+            document.getElementById('screen-survey').classList.remove('hidden');
+        }
+
+        function handleSurvey(emotion) {
+            let newGroup = group;
+            
+            // Reasignación basada en la encuesta (Control de manipulación)
+            if (emotion === 'tristeza') {
+                newGroup = "1";
+            } else if (emotion === 'felicidad') {
+                newGroup = "2";
+            } else if (emotion === 'neutral') {
+                newGroup = "3";
+            }
+            
+            // Si el estado de ánimo obliga a cambiarlo de grupo, actualizamos sus datos previos
+            if (newGroup !== group) {
+                group = newGroup;
+                experimentData.forEach(trial => {
+                    trial.Group = group; 
+                });
+            }
+            
+            // Avanzamos a la fase de Entrenamiento
             currentPhaseIndex++;
             loadPhase();
         }
@@ -543,6 +596,11 @@
 
         function endExperiment() {
             hideAllScreens();
+            
+            // Inyectar los datos finales en el HTML antes de mostrar la pantalla (Ver. 6.1.1)
+            document.getElementById('final-participant-id').innerText = participantId;
+            document.getElementById('final-group').innerText = group;
+            
             document.getElementById('screen-end').classList.remove('hidden');
         }
 
