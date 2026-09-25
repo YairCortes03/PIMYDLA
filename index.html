@@ -487,17 +487,28 @@
             if (phases[currentPhaseIndex].feedback) {
                 const feedbackScreen = document.getElementById('screen-feedback');
                 const feedbackMsg = document.getElementById('feedback-msg');
+                const audioCorrect = document.getElementById('audio-correct');
+                const audioIncorrect = document.getElementById('audio-incorrect');
+
                 feedbackScreen.classList.remove('hidden');
                 
                 if (isCorrect) {
                     feedbackMsg.innerText = "¡Correcto!";
                     feedbackMsg.className = "text-5xl font-bold text-emerald-500";
+                    audioCorrect.currentTime = 0; // Reiniciar audio por si ya sonó antes
+                    audioCorrect.play();
                 } else {
                     feedbackMsg.innerText = "Incorrecto";
                     feedbackMsg.className = "text-5xl font-bold text-red-500";
+                    audioIncorrect.currentTime = 0;
+                    audioIncorrect.play();
                 }
 
                 setTimeout(() => {
+                    // Detener audios para que no se encimen con el siguiente ensayo
+                    audioCorrect.pause();
+                    audioIncorrect.pause();
+                    
                     feedbackScreen.classList.add('hidden');
                     document.getElementById('screen-iti').classList.remove('hidden');
                     setTimeout(nextTrial, 500);
