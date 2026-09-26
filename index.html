@@ -2,14 +2,20 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <!-- Permite que la página sea responsiva en celulares y tablets -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Experimento: Igualación a la Muestra (Ver. 7.2)</title>
+    
+    <!-- Carga de Tailwind CSS para los estilos visuales rápidos -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Carga de fuente de Google para mejorar la legibilidad -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #fef9c3; } /* Fondo amarillo claro v4 */
+        /* Estilos generales del cuerpo, incluyendo el color de fondo amarillo claro v4 */
+        body { font-family: 'Inter', sans-serif; background-color: #fef9c3; } 
         
+        /* Diseño de la tarjeta que contiene cada emoji (estímulo) */
         .emoji-box {
             display: flex;
             justify-content: center;
@@ -22,51 +28,61 @@
             height: 70px;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
             transition: all 0.2s ease;
-            user-select: none;
+            user-select: none; /* Evita que el usuario seleccione el texto/emoji por error */
         }
         
+        /* Ajuste de tamaño de los emojis para pantallas más grandes (computadoras) */
         @media (min-width: 640px) {
             .emoji-box { width: 80px; height: 80px; font-size: 3rem; }
         }
 
+        /* Efectos visuales cuando se puede hacer clic en un emoji (opciones de abajo) */
         .emoji-box.clickable { cursor: pointer; }
         .emoji-box.clickable:hover { border-color: #d97706; transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
         .emoji-box.clickable:active { transform: translateY(0); }
         
+        /* Contenedores de los estímulos para mantenerlos centrados y separados */
         .es-container { display: flex; gap: 20px; justify-content: center; margin-bottom: 30px; }
         .em-container { display: flex; justify-content: center; margin-bottom: 30px; }
         .eco-container { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; max-width: 380px; margin: 0 auto;}
         
+        /* Clases utilitarias para ocultar pantallas y dar animación de desvanecimiento (fade in) */
         .hidden { display: none !important; }
         .fade-in { animation: fadeIn 0.3s ease-in; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* Spinner para intervalos entre ensayos */
+        /* Estilos de la rueda de carga (spinner) usada en el intervalo entre ensayos (ITI) */
         .loader { border: 4px solid #f3f3f3; border-top: 4px solid #d97706; border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; margin: 0 auto;}
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body class="text-slate-800 h-screen flex flex-col items-center justify-center p-4 relative z-0">
 
-    <!-- Audios para retroalimentación -->
+    <!-- Audios para retroalimentación en la fase de entrenamiento -->
     <audio id="audio-correct" src="aplausos.mp3" preload="auto"></audio>
     <audio id="audio-incorrect" src="Sad distorted violin full.mp3" preload="auto"></audio>
 
-    <!-- Logos de la institución balanceados -->
+    <!-- Logos de la institución colocados en las esquinas superiores (balanceados visualmente) -->
     <img src="Escudo-UNAM.png" alt="UNAM" class="absolute top-4 left-4 md:top-8 md:left-8 w-12 sm:w-16 md:w-20 object-contain -z-10">
     <img src="Escudo-FESI.png" alt="FESI" class="absolute top-4 right-4 md:top-8 md:right-8 w-16 sm:w-20 md:w-28 object-contain -z-10">
 
+    <!-- Contenedor central blanco donde ocurre todo el experimento -->
     <div id="app-container" class="w-full max-w-2xl bg-white rounded-2xl shadow-xl p-8 relative overflow-hidden min-h-[500px] flex flex-col justify-center border-t-8 border-amber-500 z-10">
         
-        <!-- PANTALLA DE INICIO -->
+        <!-- ========================================== -->
+        <!-- PANTALLA 1: INICIO Y CAPTURA DE DATOS      -->
+        <!-- ========================================== -->
         <div id="screen-intro" class="text-center fade-in">
             <h1 class="text-3xl font-bold text-amber-900 mb-4">Estudio de Toma de Decisiones (Ver. 7.2)</h1>
             <p class="text-slate-600 mb-6">Gracias por participar. Por favor, ingresa tu código de participante y selecciona tu grupo para comenzar.</p>
+            
+            <!-- Input del ID del participante -->
             <div class="max-w-xs mx-auto mb-6 text-left">
                 <label class="block text-sm font-medium text-slate-700 mb-1">ID del Participante:</label>
                 <input type="text" id="participant-id" class="w-full border border-slate-300 rounded-lg p-2 focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none" placeholder="Ej. SUJ-01">
             </div>
             
+            <!-- Selector ciego de grupo experimental -->
             <div class="max-w-xs mx-auto mb-8 text-left">
                 <label class="block text-sm font-medium text-slate-700 mb-1">Grupo Experimental:</label>
                 <select id="group-select" class="w-full border border-slate-300 rounded-lg p-2 focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none">
@@ -80,29 +96,38 @@
             <p id="error-msg" class="text-red-500 text-sm mt-4 hidden">Por favor completa todos los campos.</p>
         </div>
 
-        <!-- PANTALLA DE INSTRUCCIONES -->
+        <!-- ========================================== -->
+        <!-- PANTALLA 2: INSTRUCCIONES DE CADA FASE     -->
+        <!-- ========================================== -->
         <div id="screen-instructions" class="hidden fade-in text-center">
-            <h2 id="inst-title" class="text-2xl font-bold text-amber-900 mb-4">Fase 1: Preprueba</h2>
-            <div id="inst-text" class="text-slate-600 mb-8 text-left space-y-3">
-                <!-- Se llena por JS -->
-            </div>
+            <!-- El título y texto de esta pantalla cambian dinámicamente con JavaScript -->
+            <h2 id="inst-title" class="text-2xl font-bold text-amber-900 mb-4">Fase</h2>
+            <div id="inst-text" class="text-slate-600 mb-8 text-left space-y-3"></div>
             <button onclick="startPhase()" class="bg-amber-500 hover:bg-amber-600 text-white font-semibold py-2 px-8 rounded-lg shadow-md transition-colors">Iniciar Ensayos</button>
         </div>
 
-        <!-- PANTALLA DE INDUCCIÓN EMOCIONAL -->
+        <!-- ========================================== -->
+        <!-- PANTALLA 3: INDUCCIÓN EMOCIONAL (VIDEOS)   -->
+        <!-- ========================================== -->
         <div id="screen-induction" class="hidden fade-in text-center">
             <h2 class="text-2xl font-bold text-amber-900 mb-4">Actividad de Imaginación</h2>
-            <div id="induction-text" class="text-slate-700 bg-slate-50 p-6 rounded-lg mb-6 border border-slate-200 text-left">
-                <!-- Se llena por JS el iFrame de YouTube -->
-            </div>
+            <!-- Contenedor donde se inyecta el iframe de YouTube -->
+            <div id="induction-text" class="text-slate-700 bg-slate-50 p-6 rounded-lg mb-6 border border-slate-200 text-left"></div>
+            
             <p class="text-sm text-slate-500 mb-4">Por favor, observa atentamente el video durante al menos <span id="timer-display" class="font-bold text-amber-600">30</span> segundos antes de continuar.</p>
+            
+            <!-- Botón deshabilitado hasta que pase el temporizador -->
             <button id="btn-end-induction" onclick="showSurvey()" class="bg-slate-400 text-white font-semibold py-2 px-8 rounded-lg shadow-md transition-colors cursor-not-allowed" disabled>Continuar a la Encuesta</button>
         </div>
 
-        <!-- PANTALLA DE ENCUESTA -->
+        <!-- ========================================== -->
+        <!-- PANTALLA 4: ENCUESTA DE MANIPULACIÓN       -->
+        <!-- ========================================== -->
         <div id="screen-survey" class="hidden fade-in text-center flex flex-col items-center justify-center h-full w-full">
             <h2 class="text-2xl font-bold text-amber-900 mb-6">¿Cómo te sientes en este momento?</h2>
             <p class="text-slate-600 mb-8">Por favor, selecciona la opción que mejor describa tu estado de ánimo actual tras ver el video.</p>
+            
+            <!-- Botones de emoción que disparan la reasignación retroactiva -->
             <div class="flex gap-6 justify-center">
                 <button onclick="handleSurvey('tristeza')" class="flex flex-col items-center p-4 border-2 border-slate-200 rounded-xl hover:border-blue-500 hover:bg-blue-50 transition-all">
                     <span class="text-5xl mb-2">😢</span>
@@ -119,61 +144,72 @@
             </div>
         </div>
 
-        <!-- PANTALLA DE TAREA IMSO -->
+        <!-- ========================================== -->
+        <!-- PANTALLA 5: TAREA DE IGUALACIÓN (ENSAYOS)  -->
+        <!-- ========================================== -->
         <div id="screen-task" class="hidden fade-in flex flex-col items-center">
+            <!-- Indicadores superiores (Ej. Fase 1 / Ensayo 3 de 40) -->
             <div class="w-full flex justify-between items-center mb-6 text-sm font-medium text-slate-500">
                 <span id="phase-indicator" class="uppercase tracking-wider">PREPRUEBA</span>
                 <span id="trial-counter">Ensayo 1 / 40</span>
             </div>
 
-            <!-- Estímulos Selectores -->
+            <!-- Estímulos Selectores (Los 2 de arriba) -->
             <div class="w-full text-center mb-1">
                 <span class="text-xs font-semibold text-slate-400 uppercase">Estímulos Selectores</span>
             </div>
             <div class="es-container" id="es-box"></div>
 
-            <!-- Estímulo Muestra -->
+            <!-- Estímulo Muestra (El del centro) -->
             <div class="w-full text-center mb-1">
                 <span class="text-xs font-semibold text-slate-400 uppercase">Estímulo Muestra</span>
             </div>
             <div class="em-container" id="em-box"></div>
 
-            <div class="w-full h-px bg-slate-200 mb-4"></div>
+            <div class="w-full h-px bg-slate-200 mb-4"></div> <!-- Línea separadora -->
 
-            <!-- Estímulos Comparativos -->
+            <!-- Estímulos Comparativos (Las 4 opciones clickeables de abajo) -->
             <div class="w-full text-center mb-2">
                 <span class="text-xs font-semibold text-slate-400 uppercase">Elige el Estímulo Comparativo correcto</span>
             </div>
             <div class="eco-container" id="eco-box"></div>
         </div>
 
-        <!-- PANTALLA DE RETROALIMENTACIÓN -->
+        <!-- ========================================== -->
+        <!-- PANTALLA 6: RETROALIMENTACIÓN (ENTRENAMIENTO) -->
+        <!-- ========================================== -->
         <div id="screen-feedback" class="hidden fade-in flex flex-col items-center justify-center h-full">
             <h2 id="feedback-msg" class="text-4xl font-bold mb-4"></h2>
         </div>
 
-        <!-- PANTALLA DE INTERVALO ENTRE ENSAYOS (ITI) -->
+        <!-- ========================================== -->
+        <!-- PANTALLA 7: INTERVALO ENTRE ENSAYOS (ITI)  -->
+        <!-- ========================================== -->
         <div id="screen-iti" class="hidden text-center flex flex-col justify-center h-full">
             <div class="loader border-t-amber-500"></div>
         </div>
 
-        <!-- PANTALLA FINAL -->
+        <!-- ========================================== -->
+        <!-- PANTALLA 8: FIN DEL EXPERIMENTO            -->
+        <!-- ========================================== -->
         <div id="screen-end" class="hidden fade-in text-center">
             <h2 class="text-3xl font-bold text-amber-600 mb-4">¡Experimento Finalizado!</h2>
             <p class="text-slate-600 mb-6">Muchas gracias por tu participación. Tu contribución es muy valiosa para nuestra investigación.</p>
             
-            <!-- CUADRO DE RESUMEN DE DATOS -->
+            <!-- Recuadro visual que comprueba los datos del participante -->
             <div class="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-8 inline-block text-left shadow-sm">
                 <p class="text-sm text-amber-800 mb-1">Guarda estos datos para tu comprobante:</p>
                 <p class="font-semibold text-slate-800">ID: <span id="final-participant-id" class="font-bold text-amber-600"></span></p>
                 <p class="font-semibold text-slate-800">Grupo Final: <span id="final-group" class="font-bold text-amber-600"></span></p>
             </div>
 
+            <!-- Indicador de carga al enviar a Google Sheets -->
             <div id="sending-status" class="hidden flex-col items-center justify-center mb-4">
                 <div class="loader mb-4 border-t-amber-500"></div>
                 <p class="text-amber-600 font-medium">Guardando resultados en la base de datos...</p>
             </div>
             
+            <!-- Mensaje de éxito al guardar -->
             <div id="success-status" class="hidden flex-col items-center justify-center mb-4 text-emerald-600">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -182,6 +218,7 @@
                 <p class="text-sm text-slate-500 mt-2">Ya puedes cerrar esta ventana.</p>
             </div>
 
+            <!-- Botón que dispara el envío de datos -->
             <button id="btn-send-data" onclick="sendDataToSheets()" class="bg-amber-500 hover:bg-amber-600 text-white font-semibold py-3 px-8 rounded-lg shadow-md transition-colors flex items-center justify-center mx-auto gap-2">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                     <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" />
@@ -192,154 +229,158 @@
     </div>
 
     <script>
-        // --- URL DE GOOGLE APPS SCRIPT ---
+        // ========================================================================
+        // URL DEL SERVIDOR (GOOGLE APPS SCRIPT) DONDE SE ENVIARÁN LOS DATOS
+        // ========================================================================
         const GOOGLE_APP_URL = "https://script.google.com/macros/s/AKfycbzGlIn7hVl8McUimQo-ruilPqQ7_NH4yGjqmKSam9s7xBuwSJmLz0jVlMKmFpkj2luN/exec"; 
 
         // ========================================================================
-        // === BASES DE DATOS DE ENSAYOS FIJOS ===
+        // BASES DE DATOS DE ENSAYOS FIJOS (Definidos metodológicamente)
         // ========================================================================
-
+        
+        // Fase 1: PREPRUEBA (40 Ensayos sin retroalimentación)
         const ensayosPreprueba = [
-            /*1*/ { relation: 'Complementariedad', es1: '🔒', es2: '🗝️', em: '🪥', c1: '🔥', c2: '🦷', c3: '🪵', c4: '🌪', target: '🦷' },
-            /*2*/ { relation: 'Diferencia', es1: '🌞', es2: '😍', em: '🌧️', c1: '🌈', c2: '🌕', c3: '❄️', c4: '💀', target: '💀' },
-            /*3*/ { relation: 'Complementariedad', es1: '🌧️', es2: '☂️', em: '🖊️', c1: '🌪', c2: '🏀', c3: '🧸', c4: '📄', target: '📄' },
-            /*4*/ { relation: 'Diferencia', es1: '🍩', es2: '💩', em: '🌮', c1: '🌶️', c2: '🧹', c3: '🍎', c4: '🥭', target: '🧹' },
-            /*5*/ { relation: 'Igualdad', es1: '🎁', es2: '🎁', em: '🖼', c1: '🧨', c2: '🏅', c3: '🎟', c4: '🖼', target: '🖼' },
-            /*6*/ { relation: 'Semejanza en Color', es1: '🐸', es2: '🐛', em: '☹️', c1: '🧥', c2: '🚖', c3: '🤢', c4: '😡', target: '🚖' },
-            /*7*/ { relation: 'Igualdad', es1: '🥭', es2: '🥭', em: '🥜', c1: '🍨', c2: '🍑', c3: '🍙', c4: '🥜', target: '🥜' },
-            /*8*/ { relation: 'Complementariedad', es1: '☕', es2: '🍩', em: '👟', c1: '🧦', c2: '🚲', c3: '👀', c4: '👤', target: '🧦' },
-            /*9*/ { relation: 'Complementariedad', es1: '🔩', es2: '⚙️', em: '🧵', c1: '🍊', c2: '🪡', c3: '🥞', c4: '⛸️', target: '🪡' },
-            /*10*/ { relation: 'Igualdad', es1: '🐬', es2: '🐬', em: '👠', c1: '❄️', c2: '🌂', c3: '🧤', c4: '👠', target: '👠' },
-            /*11*/ { relation: 'Igualdad', es1: '🦦', es2: '🦦', em: '🎈', c1: '🥏', c2: '🥅', c3: '♟️', c4: '🎈', target: '🎈' },
-            /*12*/ { relation: 'Semejanza en Color', es1: '🌊', es2: '💙', em: '🎀', c1: '🎗️', c2: '🍅', c3: '🐽', c4: '🤎', target: '🍅' },
-            /*13*/ { relation: 'Diferencia', es1: '🐶', es2: '🍞', em: '🚗', c1: '🚒', c2: '🚑', c3: '🚚', c4: '😰', target: '😰' },
-            /*14*/ { relation: 'Semejanza en Color', es1: '🩶', es2: '🔩', em: '🍊', c1: '💙', c2: '🔧', c3: '📙', c4: '💜', target: '📙' },
-            /*15*/ { relation: 'Igualdad', es1: '🎼', es2: '🎼', em: '📷', c1: '📸', c2: '🎛', c3: '🎧', c4: '📷', target: '📷' },
-            /*16*/ { relation: 'Igualdad', es1: '😷', es2: '😷', em: '😴', c1: '🌝', c2: '🕐', c3: '🛌', c4: '😴', target: '😴' },
-            /*17*/ { relation: 'Diferencia', es1: '🔩', es2: '🧹', em: '🌲', c1: '🐝', c2: '🌹', c3: '🌵', c4: '🎼', target: '🎼' },
-            /*18*/ { relation: 'Semejanza en Color', es1: '🐻‍❄️', es2: '⚪', em: '🐈‍⬛', c1: '🐈', c2: '🐦‍⬛', c3: '🐛', c4: '🐹', target: '🐦‍⬛' },
-            /*19*/ { relation: 'Diferencia', es1: '🌲', es2: '🏙️', em: '🐛', c1: '💚', c2: '🐸', c3: '🐹', c4: '🩰', target: '🩰' },
-            /*20*/ { relation: 'Complementariedad', es1: '📩', es2: '📪', em: '🎨', c1: '🖌️', c2: '📖', c3: '👁️', c4: '🎨', target: '🖌️' },
-            /*21*/ { relation: 'Diferencia', es1: '🏫', es2: '🚗', em: '🫤', c1: '😭', c2: '🥹', c3: '😡', c4: '🎨', target: '🎨' },
-            
-            /*22*/ { relation: 'Semejanza en Color', es1: '🦇', es2: '🟫', em: '💜', c1: '🪻', c2: '🌹', c3: '❤️', c4: '🟨', target: '🪻' },
-            /*23*/ { relation: 'Semejanza en Color', es1: '😦', es2: '⚠️', em: '🤢', c1: '🤮', c2: '💩', c3: '💜', c4: '💚', target: '💚' },
-            /*24*/ { relation: 'Complementariedad', es1: '🧹', es2: '🧽', em: '💻', c1: '📺', c2: '🖱️', c3: '🎮', c4: '💻', target: '🖱️' },
-            /*25*/ { relation: 'Igualdad', es1: '🐢', es2: '🐢', em: '🦖', c1: '🦕', c2: '🐊', c3: '🐉', c4: '🦖', target: '🦖' },
-            /*26*/ { relation: 'Diferencia', es1: '🏀', es2: '🥭', em: '👍', c1: '👀', c2: '🙌', c3: '👎', c4: '✊', target: '👀' },
-            /*27*/ { relation: 'Complementariedad', es1: '🌮', es2: '🌶️', em: '🥤', c1: '🥤', c2: '📺', c3: '📖', c4: '🍿', target: '🍿' },
-            /*28*/ { relation: 'Diferencia', es1: '🦇', es2: '☃️', em: '‼️', c1: '❌', c2: '🚳', c3: '🩷', c4: '⛔', target: '🩷' },
-            /*29*/ { relation: 'Complementariedad', es1: '⚽', es2: '🥅', em: '🎸', c1: '👹', c2: '🤘', c3: '🎸', c4: '🎤', target: '🎤' },
-            /*30*/ { relation: 'Diferencia', es1: '🍒', es2: '🩷', em: '🌼', c1: '⭐', c2: '💛', c3: '👟', c4: '❤️', target: '👟' },
-            /*31*/ { relation: 'Diferencia', es1: '🚲', es2: '🍔', em: '🌙', c1: '🌝', c2: '⚠️', c3: '☀️', c4: '⚾', target: '⚾' },
-            /*32*/ { relation: 'Igualdad', es1: '😭', es2: '😭', em: '⛄', c1: '☃️', c2: '🌡️', c3: '☁️', c4: '⛄', target: '⛄' },
-            /*33*/ { relation: 'Igualdad', es1: '🛼', es2: '🛼', em: '🥇', c1: '🥇', c2: '🏅', c3: '🥈', c4: '🎖️', target: '🥇' },
-            /*34*/ { relation: 'Semejanza en Color', es1: '📒', es2: '💛', em: '💋', c1: '🧠', c2: '🩴', c3: '💿', c4: '💎', target: '🧠' },
-            /*35*/ { relation: 'Semejanza en Color', es1: '🍏', es2: '🫑', em: '🍇', c1: '🍒', c2: '🍏', c3: '🥕', c4: '🪻', target: '🪻' },
-            /*36*/ { relation: 'Semejanza en Color', es1: '🫁', es2: '🧠', em: '🥶', c1: '😨', c2: '🌞', c3: '🥵', c4: '💦', target: '💦' },
-            /*37*/ { relation: 'Complementariedad', es1: '💃', es2: '🎼', em: '🏹', c1: '🎷', c2: '🎯', c3: '⚾', c4: '🏹', target: '🎯' },
-            /*38*/ { relation: 'Semejanza en Color', es1: '❤️', es2: '💔', em: '🐤', c1: '🐈', c2: '🐅', c3: '🐯', c4: '🍇', target: '🐈' },
-            /*39*/ { relation: 'Igualdad', es1: '⛹️', es2: '⛹️', em: '🐷', c1: '🐷', c2: '🦄', c3: '🐽', c4: '🐖', target: '🐷' },
-            /*40*/ { relation: 'Complementariedad', es1: '⚓', es2: '⛵', em: '🐝', c1: '🌹', c2: '🐈', c3: '🌧️', c4: '🐝', target: '🌹' }
+            /*1*/{ relation: 'Complementariedad', es1: '🔒', es2: '🗝️', em: '🪥', c1: '🔥', c2: '🦷', c3: '🪵', c4: '🌪', target: '🦷' },
+            /*2*/{ relation: 'Diferencia', es1: '🌞', es2: '😍', em: '🌧️', c1: '🌈', c2: '🌕', c3: '❄️', c4: '💀', target: '💀' },
+            /*3*/{ relation: 'Complementariedad', es1: '🌧️', es2: '☂️', em: '🖊️', c1: '🌪', c2: '🏀', c3: '🧸', c4: '📄', target: '📄' },
+            /*4*/{ relation: 'Diferencia', es1: '🍩', es2: '💩', em: '🌮', c1: '🌶️', c2: '🧹', c3: '🍎', c4: '🥭', target: '🧹' },
+            /*5*/{ relation: 'Igualdad', es1: '🎁', es2: '🎁', em: '🖼', c1: '🧨', c2: '🏅', c3: '🎟', c4: '🖼', target: '🖼' },
+            /*6*/{ relation: 'Semejanza en Color', es1: '🐸', es2: '🐛', em: '☹️', c1: '🧥', c2: '🚖', c3: '🤢', c4: '😡', target: '🚖' },
+            /*7*/{ relation: 'Igualdad', es1: '🥭', es2: '🥭', em: '🥜', c1: '🍨', c2: '🍑', c3: '🍙', c4: '🥜', target: '🥜' },
+            /*8*/{ relation: 'Complementariedad', es1: '☕', es2: '🍩', em: '👟', c1: '🧦', c2: '🚲', c3: '👀', c4: '👤', target: '🧦' },
+            /*9*/{ relation: 'Complementariedad', es1: '🔩', es2: '⚙️', em: '🧵', c1: '🍊', c2: '🪡', c3: '🥞', c4: '⛸️', target: '🪡' },
+            /*10*/{ relation: 'Igualdad', es1: '🐬', es2: '🐬', em: '👠', c1: '❄️', c2: '🌂', c3: '🧤', c4: '👠', target: '👠' },
+            /*11*/{ relation: 'Igualdad', es1: '🦦', es2: '🦦', em: '🎈', c1: '🥏', c2: '🥅', c3: '♟️', c4: '🎈', target: '🎈' },
+            /*12*/{ relation: 'Semejanza en Color', es1: '🌊', es2: '💙', em: '🎀', c1: '🎗️', c2: '🍅', c3: '🐽', c4: '🤎', target: '🍅' },
+            /*13*/{ relation: 'Diferencia', es1: '🐶', es2: '🍞', em: '🚗', c1: '🚒', c2: '🚑', c3: '🚚', c4: '😰', target: '😰' },
+            /*14*/{ relation: 'Semejanza en Color', es1: '🩶', es2: '🔩', em: '🍊', c1: '💙', c2: '🔧', c3: '📙', c4: '💜', target: '📙' },
+            /*15*/{ relation: 'Igualdad', es1: '🎼', es2: '🎼', em: '📷', c1: '📸', c2: '🎛', c3: '🎧', c4: '📷', target: '📷' },
+            /*16*/{ relation: 'Igualdad', es1: '😷', es2: '😷', em: '😴', c1: '🌝', c2: '🕐', c3: '🛌', c4: '😴', target: '😴' },
+            /*17*/{ relation: 'Diferencia', es1: '🔩', es2: '🧹', em: '🌲', c1: '🐝', c2: '🌹', c3: '🌵', c4: '🎼', target: '🎼' },
+            /*18*/{ relation: 'Semejanza en Color', es1: '🐻‍❄️', es2: '⚪', em: '🐈‍⬛', c1: '🐈', c2: '🐦‍⬛', c3: '🐛', c4: '🐹', target: '🐦‍⬛' },
+            /*19*/{ relation: 'Diferencia', es1: '🌲', es2: '🏙️', em: '🐛', c1: '💚', c2: '🐸', c3: '🐹', c4: '🩰', target: '🩰' },
+            /*20*/{ relation: 'Complementariedad', es1: '📩', es2: '📪', em: '🎨', c1: '🖌️', c2: '📖', c3: '👁️', c4: '🎨', target: '🖌️' },
+            /*21*/{ relation: 'Diferencia', es1: '🏫', es2: '🚗', em: '🫤', c1: '😭', c2: '🥹', c3: '😡', c4: '🎨', target: '🎨' },
+            /*22*/{ relation: 'Semejanza en Color', es1: '🦇', es2: '🟫', em: '💜', c1: '🪻', c2: '🌹', c3: '❤️', c4: '🟨', target: '🪻' },
+            /*23*/{ relation: 'Semejanza en Color', es1: '😦', es2: '⚠️', em: '🤢', c1: '🤮', c2: '💩', c3: '💜', c4: '💚', target: '💚' },
+            /*24*/{ relation: 'Complementariedad', es1: '🧹', es2: '🧽', em: '💻', c1: '📺', c2: '🖱️', c3: '🎮', c4: '💻', target: '🖱️' },
+            /*25*/{ relation: 'Igualdad', es1: '🐢', es2: '🐢', em: '🦖', c1: '🦕', c2: '🐊', c3: '🐉', c4: '🦖', target: '🦖' },
+            /*26*/{ relation: 'Diferencia', es1: '🏀', es2: '🥭', em: '👍', c1: '👀', c2: '🙌', c3: '👎', c4: '✊', target: '👀' },
+            /*27*/{ relation: 'Complementariedad', es1: '🌮', es2: '🌶️', em: '🥤', c1: '🥤', c2: '📺', c3: '📖', c4: '🍿', target: '🍿' },
+            /*28*/{ relation: 'Diferencia', es1: '🦇', es2: '☃️', em: '‼️', c1: '❌', c2: '🚳', c3: '🩷', c4: '⛔', target: '🩷' },
+            /*29*/{ relation: 'Complementariedad', es1: '⚽', es2: '🥅', em: '🎸', c1: '👹', c2: '🤘', c3: '🎸', c4: '🎤', target: '🎤' },
+            /*30*/{ relation: 'Diferencia', es1: '🍒', es2: '🩷', em: '🌼', c1: '⭐', c2: '💛', c3: '👟', c4: '❤️', target: '👟' },
+            /*31*/{ relation: 'Diferencia', es1: '🚲', es2: '🍔', em: '🌙', c1: '🌝', c2: '⚠️', c3: '☀️', c4: '⚾', target: '⚾' },
+            /*32*/{ relation: 'Igualdad', es1: '😭', es2: '😭', em: '⛄', c1: '☃️', c2: '🌡️', c3: '☁️', c4: '⛄', target: '⛄' },
+            /*33*/{ relation: 'Igualdad', es1: '🛼', es2: '🛼', em: '🥇', c1: '🥇', c2: '🏅', c3: '🥈', c4: '🎖️', target: '🥇' },
+            /*34*/{ relation: 'Semejanza en Color', es1: '📒', es2: '💛', em: '💋', c1: '❤️', c2: '🩴', c3: '💿', c4: '💎', target: '❤️' },
+            /*35*/{ relation: 'Semejanza en Color', es1: '🍏', es2: '🫑', em: '🍇', c1: '🍒', c2: '🍏', c3: '🥕', c4: '🪻', target: '🪻' },
+            /*36*/{ relation: 'Semejanza en Color', es1: '🫁', es2: '🧠', em: '🥶', c1: '😨', c2: '🌞', c3: '🥵', c4: '💦', target: '💦' },
+            /*37*/{ relation: 'Complementariedad', es1: '💃', es2: '🎼', em: '🏹', c1: '🎷', c2: '🎯', c3: '⚾', c4: '🏹', target: '🎯' },
+            /*38*/{ relation: 'Semejanza en Color', es1: '❤️', es2: '💔', em: '🐤', c1: '🐈', c2: '🐅', c3: '🐯', c4: '🍇', target: '🐈' },
+            /*39*/{ relation: 'Igualdad', es1: '⛹️', es2: '⛹️', em: '🐷', c1: '🐷', c2: '🦄', c3: '🐽', c4: '🐖', target: '🐷' },
+            /*40*/{ relation: 'Complementariedad', es1: '⚓', es2: '⛵', em: '🐝', c1: '🌹', c2: '🐈', c3: '🌧️', c4: '🐝', target: '🌹' }
         ];
 
+        // Fase 3: ENTRENAMIENTO (40 Ensayos CON retroalimentación)
         const ensayosEntrenamiento = [
-            /*1*/ { relation: 'Semejanza en color', es1: '🌑', es2: '🐈‍⬛', em: '🥥', c1: '🌸', c2: '🍎', c3: '🏐', c4: '🐻', target: '🏐' },
-            /*2*/ { relation: 'Semejanza en color', es1: '🦐', es2: '🏀', em: '🐟', c1: '🥥', c2: '🌑', c3: '🐳', c4: '🍆', target: '🐳' },
-            /*3*/ { relation: 'Identidad', es1: '⚽', es2: '⚽', em: '🎸', c1: '🌲', c2: '🍔', c3: '📱', c4: '🎸', target: '🎸' },
-            /*4*/ { relation: 'Semejanza en color', es1: '🐟', es2: '🐳', em: '🍏', c1: '🥥', c2: '🍊', c3: '🐸', c4: '🍆', target: '🐸' },
-            /*5*/ { relation: 'Identidad', es1: '⌚', es2: '⌚', em: '👕', c1: '🚀', c2: '🚗', c3: '🐶', c4: '👕', target: '👕' },
-            /*6*/ { relation: 'Identidad', es1: '📱', es2: '📱', em: '🍔', c1: '👕', c2: '🌲', c3: '⌚', c4: '🍔', target: '🍔' },
-            /*7*/ { relation: 'Identidad', es1: '👕', es2: '👕', em: '🌲', c1: '⌚', c2: '🚀', c3: '🐶', c4: '🌲', target: '🌲' },
-            /*8*/ { relation: 'Identidad', es1: '🎸', es2: '🎸', em: '🚗', c1: '🚗', c2: '⚽', c3: '📱', c4: '🍔', target: '🚗' },
-            /*9*/ { relation: 'Semejanza en color', es1: '🐻', es2: '🚪', em: '🌑', c1: '🍋', c2: '🍎', c3: '🌸', c4: '🐈‍⬛', target: '🐈‍⬛' },
-            /*10*/ { relation: 'Semejanza en color', es1: '🍊', es2: '🏀', em: '🐟', c1: '🥥', c2: '🍆', c3: '🌑', c4: '🐳', target: '🐳' },
-            /*11*/ { relation: 'Semejanza en color', es1: '🐻', es2: '🚪', em: '🌑', c1: '🍎', c2: '🐈‍⬛', c3: '🍋', c4: '🌸', target: '🐈‍⬛' },
-            /*12*/ { relation: 'Identidad', es1: '⚽', es2: '⚽', em: '🎸', c1: '🎸', c2: '🌲', c3: '🍔', c4: '📱', target: '🎸' },
-            /*13*/ { relation: 'Identidad', es1: '🌲', es2: '🌲', em: '📱', c1: '👕', c2: '🚀', c3: '⌚', c4: '📱', target: '📱' },
-            /*14*/ { relation: 'Identidad', es1: '🚀', es2: '🚀', em: '⌚', c1: '⌚', c2: '🚗', c3: '🐶', c4: '🎸', target: '⌚' },
-            /*15*/ { relation: 'Identidad', es1: '👕', es2: '👕', em: '🌲', c1: '🐶', c2: '⌚', c3: '🚀', c4: '🌲', target: '🌲' },
-            /*16*/ { relation: 'Identidad', es1: '🐶', es2: '🐶', em: '🚀', c1: '🚗', c2: '⚽', c3: '🎸', c4: '🚀', target: '🚀' },
-            /*17*/ { relation: 'Semejanza en color', es1: '🌑', es2: '🐈‍⬛', em: '⚾', c1: '🌸', c2: '🏐', c3: '🐻', c4: '🍎', target: '🏐' },
-            /*18*/ { relation: 'Identidad', es1: '🌲', es2: '🌲', em: '📱', c1: '👕', c2: '⌚', c3: '🚀', c4: '📱', target: '📱' },
-            /*19*/ { relation: 'Semejanza en color', es1: '🍎', es2: '🍓', em: '🌸', c1: '🍋', c2: '🐷', c3: '🫐', c4: '🍏', target: '🐷' },
-            /*20*/ { relation: 'Semejanza en color', es1: '🥥', es2: '🏐', em: '🍆', c1: '🐻', c2: '🌸', c3: '🍏', c4: '🍇', target: '🍇' },
-            
-            /*21*/ { relation: 'Identidad', es1: '🚗', es2: '🚗', em: '🐶', c1: '🍔', c2: '⚽', c3: '🎸', c4: '🐶', target: '🐶' },
-            /*22*/ { relation: 'Semejanza en color', es1: '🍆', es2: '🍇', em: '🍊', c1: '🐻', c2: '🏀', c3: '🥥', c4: '🌑', target: '🏀' },
-            /*23*/ { relation: 'Identidad', es1: '⌚', es2: '⌚', em: '👕', c1: '👕', c2: '🐶', c3: '🚗', c4: '🚀', target: '👕' },
-            /*24*/ { relation: 'Identidad', es1: '📱', es2: '📱', em: '🍔', c1: '🌲', c2: '⌚', c3: '👕', c4: '🍔', target: '🍔' },
-            /*25*/ { relation: 'Semejanza en color', es1: '🍏', es2: '🐸', em: '🍋', c1: '🍌', c2: '🫐', c3: '🍆', c4: '🍊', target: '🍌' },
-            /*26*/ { relation: 'Semejanza en color', es1: '🥥', es2: '🏐', em: '🍆', c1: '🐻', c2: '🌸', c3: '🍊', c4: '🍇', target: '🍇' },
-            /*27*/ { relation: 'Identidad', es1: '🍔', es2: '🍔', em: '⚽', c1: '⚽', c2: '👕', c3: '📱', c4: '🌲', target: '⚽' },
-            /*28*/ { relation: 'Semejanza en color', es1: '🌸', es2: '🐷', em: '🐻', c1: '🍎', c2: '🍋', c3: '🚪', c4: '🍏', target: '🚪' },
-            /*29*/ { relation: 'Semejanza en color', es1: '🍆', es2: '🍇', em: '🍊', c1: '🥥', c2: '🏀', c3: '🐻', c4: '🌑', target: '🏀' },
-            /*30*/ { relation: 'Semejanza en color', es1: '🍏', es2: '🐸', em: '🍋', c1: '🍌', c2: '🍆', c3: '🫐', c4: '🌑', target: '🍌' },
-            /*31*/ { relation: 'Semejanza en color', es1: '🐟', es2: '🐳', em: '🍏', c1: '🍊', c2: '🐸', c3: '🥥', c4: '🍆', target: '🐸' },
-            /*32*/ { relation: 'Identidad', es1: '🐶', es2: '🐶', em: '🚀', c1: '🎸', c2: '🚗', c3: '⚽', c4: '🚀', target: '🚀' },
-            /*33*/ { relation: 'Identidad', es1: '🚀', es2: '🚀', em: '⌚', c1: '🐶', c2: '🚗', c3: '🎸', c4: '⌚', target: '⌚' },
-            /*34*/ { relation: 'Semejanza en color', es1: '🍋', es2: '🍌', em: '🍎', c1: '🍓', c2: '🍏', c3: '🍊', c4: '🫐', target: '🍓' },
-            /*35*/ { relation: 'Semejanza en color', es1: '🍋', es2: '🍌', em: '🍎', c1: '🍊', c2: '🍏', c3: '🍓', c4: '🫐', target: '🍓' },
-            /*36*/ { relation: 'Identidad', es1: '🚗', es2: '🚗', em: '🐶', c1: '⚽', c2: '🍔', c3: '🎸', c4: '🐶', target: '🐶' },
-            /*37*/ { relation: 'Identidad', es1: '🎸', es2: '🎸', em: '🚗', c1: '🍔', c2: '⚽', c3: '📱', c4: '🚗', target: '🚗' },
-            /*38*/ { relation: 'Semejanza en color', es1: '🌸', es2: '🐷', em: '🐻', c1: '🍏', c2: '🍎', c3: '🚪', c4: '🍋', target: '🚪' },
-            /*39*/ { relation: 'Identidad', es1: '🍔', es2: '🍔', em: '⚽', c1: '👕', c2: '🌲', c3: '📱', c4: '⚽', target: '⚽' },
-            /*40*/ { relation: 'Semejanza en color', es1: '🍎', es2: '🍓', em: '🌸', c1: '🫐', c2: '🐷', c3: '🍋', c4: '🍏', target: '🐷' }
+            /*1*/{ relation: 'Semejanza en color', es1: '🌑', es2: '🐈‍⬛', em: '🤍', c1: '🌸', c2: '🍎', c3: '🏐', c4: '🐻', target: '🏐' },
+            /*2*/{ relation: 'Semejanza en color', es1: '🦐', es2: '🏀', em: '🐟', c1: '🥥', c2: '🌑', c3: '🐳', c4: '🍆', target: '🐳' },
+            /*3*/{ relation: 'Identidad', es1: '⚽', es2: '⚽', em: '🎸', c1: '🌲', c2: '🍔', c3: '📱', c4: '🎸', target: '🎸' },
+            /*4*/{ relation: 'Semejanza en color', es1: '🐟', es2: '🐳', em: '🍏', c1: '🥥', c2: '🍊', c3: '🐸', c4: '🍆', target: '🐸' },
+            /*5*/{ relation: 'Identidad', es1: '⌚', es2: '⌚', em: '👕', c1: '🚀', c2: '🚗', c3: '🐶', c4: '👕', target: '👕' },
+            /*6*/{ relation: 'Identidad', es1: '📱', es2: '📱', em: '🍔', c1: '👕', c2: '🍔', c3: '🌲', c4: '⌚', target: '🍔' },
+            /*7*/{ relation: 'Identidad', es1: '👕', es2: '👕', em: '🌲', c1: '⌚', c2: '🚀', c3: '🐶', c4: '🌲', target: '🌲' },
+            /*8*/{ relation: 'Identidad', es1: '🎸', es2: '🎸', em: '🚗', c1: '🚗', c2: '⚽', c3: '📱', c4: '🍔', target: '🚗' },
+            /*9*/{ relation: 'Semejanza en color', es1: '🐻', es2: '🚪', em: '🌑', c1: '🍋', c2: '🍎', c3: '🐈‍⬛', c4: '🌸', target: '🐈‍⬛' },
+            /*10*/{ relation: 'Semejanza en color', es1: '🍊', es2: '🏀', em: '🐟', c1: '🥥', c2: '🍆', c3: '🌑', c4: '🐳', target: '🐳' },
+            /*11*/{ relation: 'Semejanza en color', es1: '🐻', es2: '🚪', em: '🌑', c1: '🍎', c2: '🐈‍⬛', c3: '🍋', c4: '🌸', target: '🐈‍⬛' },
+            /*12*/{ relation: 'Identidad', es1: '⚽', es2: '⚽', em: '🎸', c1: '🎸', c2: '🌲', c3: '🍔', c4: '📱', target: '🎸' },
+            /*13*/{ relation: 'Identidad', es1: '🌲', es2: '🌲', em: '📱', c1: '👕', c2: '📱', c3: '🚀', c4: '⌚', target: '📱' },
+            /*14*/{ relation: 'Identidad', es1: '🚀', es2: '🚀', em: '⌚', c1: '⌚', c2: '🚗', c3: '🐶', c4: '🎸', target: '⌚' },
+            /*15*/{ relation: 'Identidad', es1: '👕', es2: '👕', em: '🌲', c1: '🐶', c2: '⌚', c3: '🚀', c4: '🌲', target: '🌲' },
+            /*16*/{ relation: 'Identidad', es1: '🐶', es2: '🐶', em: '🚀', c1: '🚗', c2: '⚽', c3: '🚀', c4: '🎸', target: '🚀' },
+            /*17*/{ relation: 'Semejanza en color', es1: '🌑', es2: '🐈‍⬛', em: '⚾', c1: '🌸', c2: '🏐', c3: '🐻', c4: '🍎', target: '🏐' },
+            /*18*/{ relation: 'Identidad', es1: '🌲', es2: '🌲', em: '📱', c1: '👕', c2: '⌚', c3: '📱', c4: '🚀', target: '📱' },
+            /*19*/{ relation: 'Semejanza en color', es1: '🍎', es2: '🍓', em: '🌸', c1: '🍋', c2: '🐷', c3: '🫐', c4: '🍏', target: '🐷' },
+            /*20*/{ relation: 'Semejanza en color', es1: '🥥', es2: '🏐', em: '🍆', c1: '🐻', c2: '🌸', c3: '🍇', c4: '🍏', target: '🍇' },
+            /*21*/{ relation: 'Identidad', es1: '🚗', es2: '🚗', em: '🐶', c1: '🍔', c2: '⚽', c3: '🎸', c4: '🐶', target: '🐶' },
+            /*22*/{ relation: 'Semejanza en color', es1: '🍆', es2: '🍇', em: '🍊', c1: '🐻', c2: '🏀', c3: '🥥', c4: '🌑', target: '🏀' },
+            /*23*/{ relation: 'Identidad', es1: '⌚', es2: '⌚', em: '👕', c1: '👕', c2: '🐶', c3: '🚗', c4: '🚀', target: '👕' },
+            /*24*/{ relation: 'Identidad', es1: '📱', es2: '📱', em: '🍔', c1: '🌲', c2: '⌚', c3: '👕', c4: '🍔', target: '🍔' },
+            /*25*/{ relation: 'Semejanza en color', es1: '🍏', es2: '🐸', em: '🍋', c1: '🍌', c2: '🫐', c3: '🍆', c4: '🍊', target: '🍌' },
+            /*26*/{ relation: 'Semejanza en color', es1: '🥥', es2: '🏐', em: '🍆', c1: '🐻', c2: '🌸', c3: '🍇', c4: '🍊', target: '🍇' },
+            /*27*/{ relation: 'Identidad', es1: '🍔', es2: '🍔', em: '⚽', c1: '⚽', c2: '👕', c3: '📱', c4: '🌲', target: '⚽' },
+            /*28*/{ relation: 'Semejanza en color', es1: '🌸', es2: '🐷', em: '🐻', c1: '🍎', c2: '🍋', c3: '🚪', c4: '🍏', target: '🚪' },
+            /*29*/{ relation: 'Semejanza en color', es1: '🍆', es2: '🍇', em: '🍊', c1: '🥥', c2: '🏀', c3: '🐻', c4: '🌑', target: '🏀' },
+            /*30*/{ relation: 'Semejanza en color', es1: '🍏', es2: '🐸', em: '🍋', c1: '🍌', c2: '🍆', c3: '🫐', c4: '🌑', target: '🍌' },
+            /*31*/{ relation: 'Semejanza en color', es1: '🐟', es2: '🐳', em: '🍏', c1: '🍊', c2: '🐸', c3: '🥥', c4: '🍆', target: '🐸' },
+            /*32*/{ relation: 'Identidad', es1: '🐶', es2: '🐶', em: '🚀', c1: '🎸', c2: '🚀', c3: '🚗', c4: '⚽', target: '🚀' },
+            /*33*/{ relation: 'Identidad', es1: '🚀', es2: '🚀', em: '⌚', c1: '🐶', c2: '🚗', c3: '⌚', c4: '🎸', target: '⌚' },
+            /*34*/{ relation: 'Semejanza en color', es1: '🍋', es2: '🍌', em: '🍎', c1: '🍓', c2: '🍏', c3: '🍊', c4: '🫐', target: '🍓' },
+            /*35*/{ relation: 'Semejanza en color', es1: '🍋', es2: '🍌', em: '🍎', c1: '🍊', c2: '🍏', c3: '🍓', c4: '🫐', target: '🍓' },
+            /*36*/{ relation: 'Identidad', es1: '🚗', es2: '🚗', em: '🐶', c1: '⚽', c2: '🐶', c3: '🍔', c4: '🎸', target: '🐶' },
+            /*37*/{ relation: 'Identidad', es1: '🎸', es2: '🎸', em: '🚗', c1: '🍔', c2: '⚽', c3: '📱', c4: '🚗', target: '🚗' },
+            /*38*/{ relation: 'Semejanza en color', es1: '🌸', es2: '🐷', em: '🐻', c1: '🍏', c2: '🍎', c3: '🚪', c4: '🍋', target: '🚪' },
+            /*39*/{ relation: 'Identidad', es1: '🍔', es2: '🍔', em: '⚽', c1: '👕', c2: '🌲', c3: '📱', c4: '⚽', target: '⚽' },
+            /*40*/{ relation: 'Semejanza en color', es1: '🍎', es2: '🍓', em: '🌸', c1: '🫐', c2: '🐷', c3: '🍋', c4: '🍏', target: '🐷' }
         ];
 
+        // Fase 4: POSTPRUEBA (40 Ensayos sin retroalimentación)
         const ensayosPostprueba = [
-            /*1*/ { relation: 'Complementariedad', es1: '🔒', es2: '🔑', em: '🌧️', c1: '☂️', c2: '🦩', c3: '🐭', c4: '🥩', target: '☂️' },
-            /*2*/ { relation: 'Complementariedad', es1: '🦶', es2: '👞', em: '👁️', c1: '🌻', c2: '🔥', c3: '👗', c4: '👓', target: '👓' },
-            /*3*/ { relation: 'Complementariedad', es1: '📄', es2: '✏️', em: '✉️', c1: '🟦', c2: '📮', c3: '👁️', c4: '🍊', target: '📮' },
-            /*4*/ { relation: 'Semejanza en Color', es1: '🍎', es2: '🍓', em: '🍋', c1: '🍌', c2: '🐶', c3: '🔄', c4: '👔', target: '🍌' },
-            /*5*/ { relation: 'Complementariedad', es1: '🐒', es2: '🍌', em: '🐭', c1: '🐺', c2: '🧀', c3: '🧊', c4: '🕶️', target: '🧀' },
-            /*6*/ { relation: 'Diferencia', es1: '🌞', es2: '👟', em: '🔥', c1: '🔥', c2: '💧', c3: '🌡️', c4: '🐱', target: '🐱' },
-            /*7*/ { relation: 'Diferencia', es1: '⬆️', es2: '⬇️', em: '⬅️', c1: '🐺', c2: '➡️', c3: '🌭', c4: '👂', target: '➡️' },
-            /*8*/ { relation: 'Semejanza en Color', es1: '🐸', es2: '🐢', em: '💧', c1: '🐳', c2: '🧴', c3: '🔐', c4: '🌭', target: '🐳' },
-            /*9*/ { relation: 'Complementariedad', es1: '🔨', es2: '🔩', em: '🧵', c1: '👊', c2: '🧹', c3: '🪡', c4: '🚎', target: '🪡' },
-            /*10*/ { relation: 'Igualdad', es1: '🔑', es2: '🔑', em: '🔒', c1: '↙️', c2: '🔒', c3: '🧀', c4: '🌙', target: '🔒' },
-            /*11*/ { relation: 'Diferencia', es1: '😊', es2: '🚗', em: '☀️', c1: '📒', c2: '🚐', c3: '✏️', c4: '🌞', target: '🚐' },
-            /*12*/ { relation: 'Semejanza en Color', es1: '🍊', es2: '🏀', em: '🌑', c1: '🐈‍⬛', c2: '🌲', c3: '↖️', c4: '🌛', target: '🐈‍⬛' },
-            /*13*/ { relation: 'Igualdad', es1: '🐱', es2: '🐱', em: '🐶', c1: '🐞', c2: '👑', c3: '🐶', c4: '🧀', target: '🐶' },
-            /*14*/ { relation: 'Semejanza en Color', es1: '🐷', es2: '🌸', em: '☁️', c1: '🟦', c2: '🦩', c3: '🦢', c4: '👔', target: '🦢' },
-            /*15*/ { relation: 'Complementariedad', es1: '🦷', es2: '🪥', em: '💇', c1: '🍊', c2: '🥤', c3: '🪮', c4: '🥕', target: '🪮' },
-            /*16*/ { relation: 'Semejanza en Color', es1: '🍆', es2: '🍇', em: '🐻', c1: '🦁', c2: '🌧️', c3: '🔐', c4: '🚪', target: '🚪' },
-            /*17*/ { relation: 'Complementariedad', es1: '🛌', es2: '💤', em: '🍽️', c1: '🌻', c2: '🐰', c3: '🍴', c4: '🍎', target: '🍴' },
-            /*18*/ { relation: 'Diferencia', es1: '👴', es2: '🎸', em: '🐢', c1: '🐇', c2: '🐢', c3: '👗', c4: '🐸', target: '👗' },
-            /*19*/ { relation: 'Igualdad', es1: '🍇', es2: '🍇', em: '🍓', c1: '⛅', c2: '🏙️', c3: '🍓', c4: '📞', target: '🍓' },
-            /*20*/ { relation: 'Semejanza en Color', es1: '🚗', es2: '🚒', em: '🍏', c1: '🫐', c2: '🥬', c3: '🍆', c4: '🍒', target: '🥬' },
-            
-            /*21*/ { relation: 'Semejanza en Color', es1: '🌻', es2: '☀️', em: '👖', c1: '📚', c2: '🍇', c3: '🧢', c4: '🧣', target: '🧢' },
-            /*22*/ { relation: 'Complementariedad', es1: '👶', es2: '🍼', em: '🐶', c1: '🦴', c2: '🏸', c3: '🧽', c4: '🍂', target: '🦴' },
-            /*23*/ { relation: 'Igualdad', es1: '🍔', es2: '🍔', em: '🍟', c1: '📖', c2: '🍟', c3: '🔥', c4: '🗑️', target: '🍟' },
-            /*24*/ { relation: 'Igualdad', es1: '🎸', es2: '🎸', em: '🎹', c1: '🐰', c2: '🧴', c3: '🎹', c4: '🦚', target: '🎹' },
-            /*25*/ { relation: 'Complementariedad', es1: '🐝', es2: '🍯', em: '🐄', c1: '❄️', c2: '🥛', c3: '🕶️', c4: '🍊', target: '🥛' },
-            /*26*/ { relation: 'Igualdad', es1: '⚽', es2: '⚽', em: '🎾', c1: '🏙️', c2: '🎾', c3: '🏨', c4: '🧊', target: '🎾' },
-            /*27*/ { relation: 'Diferencia', es1: '😇', es2: '📱', em: '🕷️', c1: '🍅', c2: '🖥️', c3: '🖱️', c4: '📱', target: '🍅' },
-            /*28*/ { relation: 'Complementariedad', es1: '🎥', es2: '🍿', em: '🎯', c1: '📒', c2: '⛅', c3: '🏹', c4: '🌱', target: '🏹' },
-            /*29*/ { relation: 'Semejanza en Color', es1: '🌳', es2: '🍀', em: '🍅', c1: '🌈', c2: '🌶️', c3: '🐭', c4: '🐶', target: '🌶️' },
-            /*30*/ { relation: 'Diferencia', es1: '🧊', es2: '📕', em: '🏜️', c1: '🔏', c2: '🏔️', c3: '🍿', c4: '🍖', target: '🏔️' },
-            /*31*/ { relation: 'Semejanza en Color', es1: '🌞', es2: '🐤', em: '⛄', c1: '🥚', c2: '🍂', c3: '🐱', c4: '🖱️', target: '🖱️' },
-            /*32*/ { relation: 'Igualdad', es1: '🚗', es2: '🚗', em: '🚌', c1: '🍊', c2: '🐝', c3: '🚌', c4: '☀️', target: '🚌' },
-            /*33*/ { relation: 'Semejanza en Color', es1: '🦊', es2: '🥕', em: '🎱', c1: '👖', c2: '🌱', c3: '🌺', c4: '🎩', target: '🎩' },
-            /*34*/ { relation: 'Diferencia', es1: '🌑', es2: '🍕', em: '⬛', c1: '🥚', c2: '🟥', c3: '⬜', c4: '🏴', target: '🥚' },
-            /*35*/ { relation: 'Diferencia', es1: '🔓', es2: '🌲', em: '🔈', c1: '🔊', c2: '🐀', c3: '🧀', c4: '🏛️', target: '🧀' },
-            /*36*/ { relation: 'Diferencia', es1: '🏃', es2: '⌚', em: '🗣️', c1: '👤', c2: '💙', c3: '🗣️', c4: '🤐', target: '🤐' },
-            /*37*/ { relation: 'Igualdad', es1: '🌞', es2: '🌞', em: '🌜', c1: '🐺', c2: '🏕️', c3: '🦊', c4: '🌜', target: '🌜' },
-            /*38*/ { relation: 'Igualdad', es1: '📘', es2: '📘', em: '📙', c1: '🏙️', c2: '📙', c3: '📒', c4: '🧽', target: '📙' },
-            /*39*/ { relation: 'Diferencia', es1: '🌅', es2: '🍔', em: '🌱', c1: '🌲', c2: '🎷', c3: '🍂', c4: '🥕', target: '🎷' },
-            /*40*/ { relation: 'Igualdad', es1: '👕', es2: '👕', em: '🩳', c1: '🍊', c2: '🏓', c3: '🪒', c4: '🩳', target: '🩳' }
+            /*1*/{ relation: 'Complementariedad', es1: '🔒', es2: '🔑', em: '🌧️', c1: '☂️', c2: '🦩', c3: '🐭', c4: '🥩', target: '☂️' },
+            /*2*/{ relation: 'Complementariedad', es1: '🦶', es2: '👞', em: '👁️', c1: '🌻', c2: '🔥', c3: '👗', c4: '👓', target: '👓' },
+            /*3*/{ relation: 'Complementariedad', es1: '📄', es2: '✏️', em: '✉️', c1: '🟦', c2: '📮', c3: '👁️', c4: '🍊', target: '📮' },
+            /*4*/{ relation: 'Semejanza en Color', es1: '🍎', es2: '🍓', em: '🍋', c1: '🍌', c2: '🐶', c3: '🔄', c4: '👔', target: '🍌' },
+            /*5*/{ relation: 'Complementariedad', es1: '🐒', es2: '🍌', em: '🐭', c1: '🐺', c2: '🧀', c3: '🧊', c4: '🕶️', target: '🧀' },
+            /*6*/{ relation: 'Diferencia', es1: '🌞', es2: '👟', em: '🔥', c1: '🔥', c2: '💧', c3: '🌡️', c4: '🐱', target: '🐱' },
+            /*7*/{ relation: 'Diferencia', es1: '⬆️', es2: '⬇️', em: '⬅️', c1: '🐺', c2: '➡️', c3: '🌭', c4: '👂', target: '➡️' },
+            /*8*/{ relation: 'Semejanza en Color', es1: '🐸', es2: '🐢', em: '💧', c1: '🐳', c2: '🧴', c3: '🔐', c4: '🌭', target: '🐳' },
+            /*9*/{ relation: 'Complementariedad', es1: '🔨', es2: '🔩', em: '🧵', c1: '👊', c2: '🧹', c3: '🪡', c4: '🚎', target: '🪡' },
+            /*10*/{ relation: 'Igualdad', es1: '🔑', es2: '🔑', em: '🔒', c1: '↙️', c2: '🔒', c3: '🧀', c4: '🌙', target: '🔒' },
+            /*11*/{ relation: 'Diferencia', es1: '😊', es2: '🚗', em: '☀️', c1: '📒', c2: '🚐', c3: '✏️', c4: '🌞', target: '🚐' },
+            /*12*/{ relation: 'Semejanza en Color', es1: '🍊', es2: '🏀', em: '🌑', c1: '🐈‍⬛', c2: '🌲', c3: '↖️', c4: '🌛', target: '🐈‍⬛' },
+            /*13*/{ relation: 'Igualdad', es1: '🐱', es2: '🐱', em: '🐶', c1: '🐞', c2: '👑', c3: '🐶', c4: '🧀', target: '🐶' },
+            /*14*/{ relation: 'Semejanza en Color', es1: '🐷', es2: '🌸', em: '☁️', c1: '🟦', c2: '🦩', c3: '🦢', c4: '👔', target: '🦢' },
+            /*15*/{ relation: 'Complementariedad', es1: '🦷', es2: '🪥', em: '💇', c1: '🍊', c2: '🥤', c3: '🪮', c4: '🥕', target: '🪮' },
+            /*16*/{ relation: 'Semejanza en Color', es1: '🍆', es2: '🍇', em: '🐻', c1: '🦁', c2: '🌧️', c3: '🔐', c4: '🚪', target: '🚪' },
+            /*17*/{ relation: 'Complementariedad', es1: '🛌', es2: '💤', em: '🍽️', c1: '🌻', c2: '🐰', c3: '🍴', c4: '🍎', target: '🍴' },
+            /*18*/{ relation: 'Diferencia', es1: '👴', es2: '🎸', em: '🐢', c1: '🐇', c2: '🐢', c3: '👗', c4: '🐸', target: '👗' },
+            /*19*/{ relation: 'Igualdad', es1: '🍇', es2: '🍇', em: '🍓', c1: '⛅', c2: '🏙️', c3: '🍓', c4: '📞', target: '🍓' },
+            /*20*/{ relation: 'Semejanza en Color', es1: '🚗', es2: '🚒', em: '🍏', c1: '🫐', c2: '🥬', c3: '🍆', c4: '🍒', target: '🥬' },
+            /*21*/{ relation: 'Semejanza en Color', es1: '🌻', es2: '☀️', em: '👖', c1: '📚', c2: '🍇', c3: '🧢', c4: '🧣', target: '🧢' },
+            /*22*/{ relation: 'Complementariedad', es1: '👶', es2: '🍼', em: '🐶', c1: '🦴', c2: '🏸', c3: '🧽', c4: '🍂', target: '🦴' },
+            /*23*/{ relation: 'Igualdad', es1: '🍔', es2: '🍔', em: '🍟', c1: '📖', c2: '🍟', c3: '🔥', c4: '🗑️', target: '🍟' },
+            /*24*/{ relation: 'Igualdad', es1: '🎸', es2: '🎸', em: '🎹', c1: '🐰', c2: '🧴', c3: '🎹', c4: '🦚', target: '🎹' },
+            /*25*/{ relation: 'Complementariedad', es1: '🐝', es2: '🍯', em: '🐄', c1: '❄️', c2: '🥛', c3: '🕶️', c4: '🍊', target: '🥛' },
+            /*26*/{ relation: 'Igualdad', es1: '⚽', es2: '⚽', em: '🎾', c1: '🏙️', c2: '🎾', c3: '🏨', c4: '🧊', target: '🎾' },
+            /*27*/{ relation: 'Diferencia', es1: '😇', es2: '📱', em: '🕷️', c1: '🍅', c2: '🖥️', c3: '🖱️', c4: '📱', target: '🍅' },
+            /*28*/{ relation: 'Complementariedad', es1: '🎥', es2: '🍿', em: '🎯', c1: '📒', c2: '⛅', c3: '🏹', c4: '🌱', target: '🏹' },
+            /*29*/{ relation: 'Semejanza en Color', es1: '🌳', es2: '🍀', em: '🍅', c1: '🌈', c2: '🌶️', c3: '🐭', c4: '🐶', target: '🌶️' },
+            /*30*/{ relation: 'Diferencia', es1: '🧊', es2: '📕', em: '🏜️', c1: '🔏', c2: '🏔️', c3: '🍿', c4: '🍖', target: '🏔️' },
+            /*31*/{ relation: 'Semejanza en Color', es1: '🌞', es2: '🐤', em: '⛄', c1: '🥚', c2: '🍂', c3: '🐱', c4: '🖱️', target: '🖱️' },
+            /*32*/{ relation: 'Igualdad', es1: '🚗', es2: '🚗', em: '🚌', c1: '🍊', c2: '🐝', c3: '🚌', c4: '☀️', target: '🚌' },
+            /*33*/{ relation: 'Semejanza en Color', es1: '🦊', es2: '🥕', em: '🎱', c1: '👖', c2: '🌱', c3: '🌺', c4: '🎩', target: '🎩' },
+            /*34*/{ relation: 'Diferencia', es1: '🌑', es2: '🍕', em: '⬛', c1: '🥚', c2: '🟥', c3: '⬜', c4: '🏴', target: '🥚' },
+            /*35*/{ relation: 'Diferencia', es1: '🔓', es2: '🌲', em: '🔈', c1: '🔊', c2: '🐀', c3: '🧀', c4: '🏛️', target: '🧀' },
+            /*36*/{ relation: 'Diferencia', es1: '🏃', es2: '⌚', em: '🗣️', c1: '👤', c2: '💙', c3: '🗣️', c4: '🤐', target: '🤐' },
+            /*37*/{ relation: 'Igualdad', es1: '🌞', es2: '🌞', em: '🌜', c1: '🐺', c2: '🏕️', c3: '🦊', c4: '🌜', target: '🌜' },
+            /*38*/{ relation: 'Igualdad', es1: '📘', es2: '📘', em: '📙', c1: '🏙️', c2: '📙', c3: '📒', c4: '🧽', target: '📙' },
+            /*39*/{ relation: 'Diferencia', es1: '🌅', es2: '🍔', em: '🌱', c1: '🌲', c2: '🎷', c3: '🍂', c4: '🥕', target: '🎷' },
+            /*40*/{ relation: 'Igualdad', es1: '👕', es2: '👕', em: '🩳', c1: '🍊', c2: '🏓', c3: '🪒', c4: '🩳', target: '🩳' }
         ];
 
+        // Variables de estado del experimento (llevan el control de dónde está el usuario)
         let participantId = "";
         let group = "";
-        let currentPhaseIndex = 0;
-        let currentTrialIndex = 0;
-        let trialStartTime = 0;
-        let currentPhaseTrials = [];
-        let experimentData = [];
-        let inductionTimerInterval = null;
+        let currentPhaseIndex = 0; // Índice de la fase actual (0 = preprueba, 1 = inducción, etc)
+        let currentTrialIndex = 0; // Número de ensayo actual dentro de la fase
+        let trialStartTime = 0;    // Para medir el tiempo de reacción en milisegundos
+        let currentPhaseTrials = []; // Arreglo que almacena temporalmente los ensayos de la fase activa
+        let experimentData = [];     // Arreglo maestro donde se guardan todas las respuestas para enviar a Google Sheets
+        let inductionTimerInterval = null; // Variable para manejar el reloj del video
 
+        // Definición de las 4 fases maestras del experimento
         const phases = [
             {
                 id: "preprueba",
@@ -354,12 +395,12 @@
                     <p><b>Tu tarea:</b> Elegir la opción de abajo que se relacione con la figura del centro de la <b>misma manera</b> en que se relacionan las dos figuras de arriba.</p>
                     <p>Hazlo lo más rápido y preciso que puedas. No se te informará si tu respuesta es correcta o incorrecta.</p>`,
                 trials: ensayosPreprueba,
-                feedback: false
+                feedback: false // Indica que NO suena audio ni dice "Correcto"
             },
             {
                 id: "induccion",
                 title: "Fase 2: Actividad",
-                type: "induction"
+                type: "induction" // Fase especial (Video)
             },
             {
                 id: "entrenamiento",
@@ -369,7 +410,7 @@
                     <p>Recuerda: Debes elegir la figura de abajo que se relacione con la del centro, siguiendo el mismo principio que rige a las dos figuras de arriba.</p>
                     <p>En esta fase <b>sí se te informará</b> si tu respuesta fue correcta o incorrecta después de cada elección.</p>`,
                 trials: ensayosEntrenamiento,
-                feedback: true
+                feedback: true // Indica que SÍ suena audio y da mensaje
             },
             {
                 id: "postprueba",
@@ -379,19 +420,22 @@
                     <p>Las reglas son exactamente las mismas. Observa las figuras de arriba, analiza la muestra central y elige la respuesta correcta abajo.</p>
                     <p>Al igual que en la primera fase, no se te informará si tu respuesta es correcta.</p>`,
                 trials: ensayosPostprueba,
-                feedback: false
+                feedback: false // Sin retroalimentación
             }
         ];
 
+        // Función utilitaria para esconder todas las "pantallas" antes de mostrar una nueva
         function hideAllScreens() {
             document.querySelectorAll('#app-container > div').forEach(el => el.classList.add('hidden'));
         }
 
+        // Función que se activa al presionar el botón de "Comenzar"
         function startExperiment() {
             const idInput = document.getElementById('participant-id').value.trim();
             const groupInput = document.getElementById('group-select').value;
             const errorMsg = document.getElementById('error-msg');
 
+            // Validación para que no dejen en blanco el ID ni el Grupo
             if (idInput === "" || groupInput === "") {
                 errorMsg.classList.remove('hidden');
                 return;
@@ -401,10 +445,12 @@
             group = groupInput;
             errorMsg.classList.add('hidden');
 
-            loadPhase();
+            loadPhase(); // Iniciar la carga de la primera fase
         }
 
+        // Controlador maestro que decide qué mostrar dependiendo de la Fase Actual
         function loadPhase() {
+            // Si ya no hay más fases, terminar el experimento
             if (currentPhaseIndex >= phases.length) {
                 endExperiment();
                 return;
@@ -413,15 +459,19 @@
             const phase = phases[currentPhaseIndex];
             hideAllScreens();
 
+            // Lógica si la fase es la Inducción (Video)
             if (phase.type === "induction") {
                 if (group === "3") {
-                    currentPhaseIndex++; // Saltar video si es Control
+                    // Control Experimental: El Grupo 3 NO ve video, salta directo a la fase de entrenamiento
+                    currentPhaseIndex++; 
                     loadPhase();
                     return;
                 } else {
-                    setupInduction();
+                    setupInduction(); // G1 y G2 sí ven video
                 }
             } else {
+                // Lógica para las Fases de Ensayos (Pre, Ent, Post)
+                // Aquí el algoritmo lee tu base de datos y revuelve SOLO las 4 opciones de respuesta
                 currentPhaseTrials = phase.trials.map(t => ({
                     relation: t.relation,
                     es1: t.es1,
@@ -438,27 +488,31 @@
                 
                 currentTrialIndex = 0;
                 
+                // Actualiza e inyecta las instrucciones en la pantalla visual
                 document.getElementById('inst-title').innerHTML = phase.title;
                 document.getElementById('inst-text').innerHTML = phase.instructions;
                 document.getElementById('screen-instructions').classList.remove('hidden');
             }
         }
 
+        // Oculta las instrucciones y muestra la pantalla principal del primer ensayo
         function startPhase() {
             hideAllScreens();
             document.getElementById('screen-task').classList.remove('hidden');
             renderTrial();
         }
 
+        // Configura y muestra el video de YouTube según el grupo
         function setupInduction() {
             document.getElementById('screen-induction').classList.remove('hidden');
             const textEl = document.getElementById('induction-text');
             const btn = document.getElementById('btn-end-induction');
             const timerDisplay = document.getElementById('timer-display');
             
-            // Video Tristeza (Grupo 1) vs Video Felicidad (Grupo 2)
+            // Asignación de video: G1 (Tristeza = zefi8HG4edU), G2 (Felicidad = dQw4w9WgXcQ)
             let videoId = group === "1" ? "zefi8HG4edU" : "dQw4w9WgXcQ"; 
             
+            // Inyectar el reproductor de YouTube
             textEl.innerHTML = `
                 <div class="relative w-full overflow-hidden rounded-lg shadow-md border border-slate-200" style="padding-top: 56.25%;">
                     <iframe class="absolute top-0 left-0 w-full h-full" 
@@ -470,18 +524,19 @@
                 </div>
             `;
 
-            let timeLeft = 30; // Segundos que deben esperar obligatoriamente
+            let timeLeft = 30; // Temporizador obligatorio en segundos
             btn.disabled = true;
             btn.classList.remove('bg-amber-500', 'hover:bg-amber-600');
             btn.classList.add('bg-slate-400', 'cursor-not-allowed');
             timerDisplay.innerText = timeLeft;
 
+            // Iniciar el reloj de cuenta regresiva
             inductionTimerInterval = setInterval(() => {
                 timeLeft--;
                 timerDisplay.innerText = timeLeft;
                 if (timeLeft <= 0) {
                     clearInterval(inductionTimerInterval);
-                    btn.disabled = false;
+                    btn.disabled = false; // Habilitar el botón de continuar
                     btn.classList.remove('bg-slate-400', 'cursor-not-allowed');
                     btn.classList.add('bg-amber-500', 'hover:bg-amber-600');
                     btn.innerText = "Continuar a la Encuesta";
@@ -490,14 +545,17 @@
             }, 1000);
         }
 
+        // Mostrar la encuesta de Control de Manipulación
         function showSurvey() {
             hideAllScreens();
             document.getElementById('screen-survey').classList.remove('hidden');
         }
 
+        // Procesar lo que respondió el usuario en la encuesta
         function handleSurvey(emotion) {
             let newGroup = group;
             
+            // Algoritmo de reasignación
             if (emotion === 'tristeza') {
                 newGroup = "1";
             } else if (emotion === 'felicidad') {
@@ -506,7 +564,8 @@
                 newGroup = "3";
             }
             
-            // Reasignación retroactiva si cambió de emoción
+            // Si el participante sintió algo diferente a lo que dictaba su grupo, 
+            // se corrige retroactivamente su grupo en la base de datos (Preprueba)
             if (newGroup !== group) {
                 group = newGroup;
                 experimentData.forEach(trial => {
@@ -514,10 +573,11 @@
                 });
             }
             
-            currentPhaseIndex++;
+            currentPhaseIndex++; // Pasar al entrenamiento
             loadPhase();
         }
 
+        // Función matemática para revolver arreglos (Opciones de respuesta)
         function shuffle(array) {
             for (let i = array.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
@@ -526,38 +586,47 @@
             return array;
         }
 
+        // Dibuja visualmente los emojis en la pantalla para cada intento
         function renderTrial() {
             const trial = currentPhaseTrials[currentTrialIndex];
             
+            // Actualizar textos informativos superiores
             document.getElementById('phase-indicator').innerText = phases[currentPhaseIndex].title;
             document.getElementById('trial-counter').innerText = `Ensayo ${currentTrialIndex + 1} / ${currentPhaseTrials.length}`;
             
+            // Inyectar Estímulos Selectores (Arriba)
             document.getElementById('es-box').innerHTML = `
                 <div class="emoji-box">${trial.es1}</div>
                 <div class="emoji-box">${trial.es2}</div>
             `;
             
+            // Inyectar Estímulo Muestra (Centro)
             document.getElementById('em-box').innerHTML = `
                 <div class="emoji-box border-amber-300 bg-amber-50">${trial.em}</div>
             `;
             
+            // Inyectar Estímulos Comparativos (Las 4 opciones clickeables abajo)
             const ecoBox = document.getElementById('eco-box');
             ecoBox.innerHTML = '';
             trial.ecos.forEach((eco) => {
                 const btn = document.createElement('div');
                 btn.className = 'emoji-box clickable';
                 btn.innerText = eco.emoji;
+                // Al hacer clic, ejecutar la función handleResponse
                 btn.onclick = () => handleResponse(eco, trial);
                 ecoBox.appendChild(btn);
             });
 
+            // Guardar el tiempo exacto en que apareció el ensayo para calcular el Tiempo de Reacción
             trialStartTime = performance.now();
         }
 
+        // Lógica ejecutada en el milisegundo en que el usuario hace clic en una opción
         function handleResponse(selectedEco, trial) {
-            const reactionTime = performance.now() - trialStartTime;
+            const reactionTime = performance.now() - trialStartTime; // Calcular MS
             const isCorrect = selectedEco.isTarget;
 
+            // Guardar el "Renglón" de datos en la memoria temporal
             experimentData.push({
                 Participant_ID: participantId,
                 Group: group,
@@ -575,6 +644,7 @@
 
             hideAllScreens();
 
+            // Comprobar si la fase actual tiene activada la Retroalimentación (Fase Entrenamiento)
             if (phases[currentPhaseIndex].feedback) {
                 const feedbackScreen = document.getElementById('screen-feedback');
                 const feedbackMsg = document.getElementById('feedback-msg');
@@ -599,21 +669,24 @@
                     } catch(e) {}
                 }
 
+                // Esperar 3 segundos (3000 ms) antes de pasar al siguiente ensayo
                 setTimeout(() => {
                     try { audioCorrect.pause(); } catch(e) {}
                     try { audioIncorrect.pause(); } catch(e) {}
                     
                     feedbackScreen.classList.add('hidden');
                     document.getElementById('screen-iti').classList.remove('hidden');
-                    setTimeout(nextTrial, 500);
-                }, 3000); // 3 Segundos de retroalimentación
+                    setTimeout(nextTrial, 500); // Pequeño espacio visual (ITI) de medio segundo
+                }, 3000); 
 
             } else {
+                // Si la fase NO tiene retroalimentación, mostrar el ITI e ir al siguiente
                 document.getElementById('screen-iti').classList.remove('hidden');
                 setTimeout(nextTrial, 500);
             }
         }
 
+        // Lógica para avanzar al siguiente ensayo o saltar a la siguiente Fase si ya se acabaron los 40
         function nextTrial() {
             currentTrialIndex++;
             if (currentTrialIndex < currentPhaseTrials.length) {
@@ -626,25 +699,30 @@
             }
         }
 
+        // Pantalla de cierre y comprobación visual para el participante
         function endExperiment() {
             hideAllScreens();
+            // Llenar el recuadro amarillo con el ID original y el Grupo final (post-encuesta)
             document.getElementById('final-participant-id').innerText = participantId;
             document.getElementById('final-group').innerText = group;
             document.getElementById('screen-end').classList.remove('hidden');
         }
 
+        // Función asíncrona que empaqueta y envía el arreglo de respuestas hacia Google Drive
         async function sendDataToSheets() {
-            if (experimentData.length === 0) return;
+            if (experimentData.length === 0) return; // Evitar envíos vacíos
             
             const btn = document.getElementById('btn-send-data');
             const loading = document.getElementById('sending-status');
             const success = document.getElementById('success-status');
             
+            // Ocultar botón y mostrar ícono de cargando
             btn.classList.add('hidden');
             loading.classList.remove('hidden');
             loading.classList.add('flex');
 
             try {
+                // Petición al servidor de Google Apps Script (Usa no-cors por restricciones de Google)
                 await fetch(GOOGLE_APP_URL, {
                     method: 'POST',
                     mode: 'no-cors',
@@ -652,6 +730,7 @@
                     body: JSON.stringify(experimentData)
                 });
 
+                // Simular un tiempo razonable y mostrar mensaje de Éxito
                 setTimeout(() => {
                     loading.classList.remove('flex');
                     loading.classList.add('hidden');
@@ -660,6 +739,7 @@
                 }, 1000);
                 
             } catch (error) {
+                // En caso de que el internet del participante falle
                 console.error("Error al enviar:", error);
                 alert("Hubo un problema de conexión al guardar los datos.");
                 loading.classList.remove('flex');
