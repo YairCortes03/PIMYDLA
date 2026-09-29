@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <!-- Permite que la página sea responsiva en celulares y tablets -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Experimento: Igualación a la Muestra (Ver. 7.2.3)</title>
+    <title>Experimento: Igualación a la Muestra (Ver. 7.2.4)</title>
     
     <!-- Carga de Tailwind CSS para los estilos visuales rápidos -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -73,7 +73,7 @@
         <!-- PANTALLA 1: INICIO Y CAPTURA DE DATOS      -->
         <!-- ========================================== -->
         <div id="screen-intro" class="text-center fade-in">
-            <h1 class="text-3xl font-bold text-amber-900 mb-4">Estudio de Toma de Decisiones (Ver. 7.2.3)</h1>
+            <h1 class="text-3xl font-bold text-amber-900 mb-4">Estudio de Toma de Decisiones (Ver. 7.2.4)</h1>
             <p class="text-slate-600 mb-6">Gracias por participar. Por favor, ingresa tu código de participante y selecciona tu grupo para comenzar.</p>
             
             <!-- Input del ID del participante -->
@@ -89,7 +89,6 @@
                     <option value="">Selecciona un grupo...</option>
                     <option value="1">Grupo 1</option>
                     <option value="2">Grupo 2</option>
-                    <option value="3">Grupo 3</option>
                 </select>
             </div>
             <button onclick="startExperiment()" class="bg-amber-500 hover:bg-amber-600 text-white font-semibold py-2 px-8 rounded-lg shadow-md transition-colors">Comenzar</button>
@@ -132,10 +131,6 @@
                 <button onclick="handleSurvey('tristeza')" class="flex flex-col items-center p-4 border-2 border-slate-200 rounded-xl hover:border-blue-500 hover:bg-blue-50 transition-all">
                     <span class="text-5xl mb-2">😢</span>
                     <span class="font-medium text-slate-700">Tristeza</span>
-                </button>
-                <button onclick="handleSurvey('neutral')" class="flex flex-col items-center p-4 border-2 border-slate-200 rounded-xl hover:border-slate-500 hover:bg-slate-50 transition-all">
-                    <span class="text-5xl mb-2">😐</span>
-                    <span class="font-medium text-slate-700">Neutral</span>
                 </button>
                 <button onclick="handleSurvey('felicidad')" class="flex flex-col items-center p-4 border-2 border-slate-200 rounded-xl hover:border-amber-500 hover:bg-amber-50 transition-all">
                     <span class="text-5xl mb-2">😀</span>
@@ -273,7 +268,7 @@
             /*31*/{ relation: 'Diferencia', es1: '🚲', es2: '🍔', em: '🌙', c1: '🌝', c2: '⚠️', c3: '☀️', c4: '⚾', target: '⚾' },
             /*32*/{ relation: 'Igualdad', es1: '😭', es2: '😭', em: '⛄', c1: '☃️', c2: '🌡️', c3: '☁️', c4: '⛄', target: '⛄' },
             /*33*/{ relation: 'Igualdad', es1: '🛼', es2: '🛼', em: '🥇', c1: '🥇', c2: '🏅', c3: '🥈', c4: '🎖️', target: '🥇' },
-            /*34*/{ relation: 'Semejanza en Color', es1: '📒', es2: '💛', em: '💋', c1: '❤️', c2: '🩴', c3: '💿', c4: '💎', target: '❤️' },
+            /*34*/{ relation: 'Semejanza en Color', es1: '📒', es2: '💛', em: '💋', c1: '🧠', c2: '🩴', c3: '💿', c4: '💎', target: '🧠' },
             /*35*/{ relation: 'Semejanza en Color', es1: '🍏', es2: '🫑', em: '🍇', c1: '🍒', c2: '🍏', c3: '🥕', c4: '🪻', target: '🪻' },
             /*36*/{ relation: 'Semejanza en Color', es1: '🫁', es2: '🧠', em: '🥶', c1: '😨', c2: '🌞', c3: '🥵', c4: '💦', target: '💦' },
             /*37*/{ relation: 'Complementariedad', es1: '💃', es2: '🎼', em: '🏹', c1: '🎷', c2: '🎯', c3: '⚾', c4: '🏹', target: '🎯' },
@@ -284,7 +279,7 @@
 
         // Fase 3: ENTRENAMIENTO (40 Ensayos CON retroalimentación)
         const ensayosEntrenamiento = [
-            /*1*/{ relation: 'Semejanza en color', es1: '🌑', es2: '🐈‍⬛', em: '🤍', c1: '🌸', c2: '🍎', c3: '🏐', c4: '🐻', target: '🏐' },
+            /*1*/{ relation: 'Semejanza en color', es1: '🌑', es2: '🐈‍⬛', em: '🥥', c1: '🌸', c2: '🍎', c3: '🏐', c4: '🐻', target: '🏐' },
             /*2*/{ relation: 'Semejanza en color', es1: '🦐', es2: '🏀', em: '🐟', c1: '🥥', c2: '🌑', c3: '🐳', c4: '🍆', target: '🐳' },
             /*3*/{ relation: 'Identidad', es1: '⚽', es2: '⚽', em: '🎸', c1: '🌲', c2: '🍔', c3: '📱', c4: '🎸', target: '🎸' },
             /*4*/{ relation: 'Semejanza en color', es1: '🐟', es2: '🐳', em: '🍏', c1: '🥥', c2: '🍊', c3: '🐸', c4: '🍆', target: '🐸' },
@@ -416,14 +411,9 @@
                 id: "postprueba",
                 title: "Fase 4: Postprueba",
                 instructions: `
-                   <p>A continuación verás arreglos de figuras.</p>
-                    <ul class="list-disc pl-5">
-                        <li>En la parte <b>superior</b> verás 2 figuras que guardan una relación entre sí.</li>
-                        <li>En el <b>centro</b> verás una figura muestra.</li>
-                        <li>En la parte <b>inferior</b> verás 4 opciones.</li>
-                    </ul>
-                    <p><b>Tu tarea:</b> Elegir la opción de abajo que se relacione con la figura del centro de la <b>misma manera</b> en que se relacionan las dos figuras de arriba.</p>
-                    <p>Hazlo lo más rápido y preciso que puedas. No se te informará si tu respuesta es correcta o incorrecta.</p>`,
+                    <p>Esta es la última fase de la tarea.</p>
+                    <p>Las reglas son exactamente las mismas. Observa las figuras de arriba, analiza la muestra central y elige la respuesta correcta abajo.</p>
+                    <p>Al igual que en la primera fase, no se te informará si tu respuesta es correcta.</p>`,
                 trials: ensayosPostprueba,
                 feedback: false // Sin retroalimentación
             }
@@ -466,14 +456,7 @@
 
             // Lógica si la fase es la Inducción (Video)
             if (phase.type === "induction") {
-                if (group === "3") {
-                    // Control Experimental: El Grupo 3 NO ve video, salta directo a la fase de entrenamiento
-                    currentPhaseIndex++; 
-                    loadPhase();
-                    return;
-                } else {
-                    setupInduction(); // G1 y G2 sí ven video
-                }
+                setupInduction(); // G1 y G2 sí ven video
             } else {
                 // Lógica para las Fases de Ensayos (Pre, Ent, Post)
                 // Aquí el algoritmo lee tu base de datos y revuelve SOLO las 4 opciones de respuesta
@@ -515,7 +498,7 @@
             const timerDisplay = document.getElementById('timer-display');
             
             // Asignación de video: G1 (Tristeza = zefi8HG4edU), G2 (Felicidad = dQw4w9WgXcQ)
-            let videoId = group === "1" ? "zefi8HG4edU" : "NxNbdHwSMac"; 
+            let videoId = group === "1" ? "zefi8HG4edU" : "dQw4w9WgXcQ"; 
             
             // Inyectar el reproductor de YouTube
             textEl.innerHTML = `
@@ -560,13 +543,11 @@
         function handleSurvey(emotion) {
             let newGroup = group;
             
-            // Algoritmo de reasignación
+            // Algoritmo de reasignación (Solo entre grupo 1 y 2)
             if (emotion === 'tristeza') {
                 newGroup = "1";
             } else if (emotion === 'felicidad') {
                 newGroup = "2";
-            } else if (emotion === 'neutral') {
-                newGroup = "3";
             }
             
             // Si el participante sintió algo diferente a lo que dictaba su grupo, 
